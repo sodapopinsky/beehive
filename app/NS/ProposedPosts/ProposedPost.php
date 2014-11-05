@@ -10,7 +10,7 @@ class ProposedPost extends Entity
 
     protected $table    = 'proposedPosts';
     protected $hidden   = ['github_id'];
-    protected $fillable = ['message','organization', 'user', 'picture'];
+    protected $fillable = ['message','organization', 'user', 'picture','platform'];
     protected $dates    = ['deleted_at'];
 
        public function user()

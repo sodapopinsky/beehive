@@ -11,12 +11,8 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
 
-
+Route::get('/', 'UsersController@index');
 Route::get('logout', 'AuthController@doLogout');
 Route::group(['before' => 'auth'], function() {
 Route::get('user', 'UsersController@index');
@@ -27,8 +23,9 @@ Route::get('doFacebookLogout', 'FacebookController@doFacebookLogout');
 Route::post('facebook/doproposepost', 'FacebookController@doProposePost');
 
 
-//Facebook
+//Twitter
 Route::get('twitter', 'TwitterController@index');
+Route::post('twitter/doproposetweet', 'TwitterController@doProposeTweet');
 });
 
 Route::get('createrootuser', 'UsersController@createRootUser');

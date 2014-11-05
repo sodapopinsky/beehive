@@ -14,7 +14,7 @@
             <div class="col-sm-7">
               <div class="personal">
                 <h1 class="name">{{Auth::user()->firstName . " " . Auth::user()->lastName}}</h1>
-                <p class="description">I like new ideas, hamburgers, and any intersection of science, business, and art.<p>
+                <p class="description"><p>
               </div>
             </div>
            

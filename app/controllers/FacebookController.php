@@ -24,7 +24,7 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 	public function index()
 	{
-		$proposedPosts = ProposedPost::orderBy('created_at', 'DESC')->paginate(5);
+		$proposedPosts = ProposedPost::orderBy('created_at', 'DESC')->where('platform','facebook')->paginate(5);
 		$this->view('facebook.facebook',compact('proposedPosts'));
 	}
 
@@ -34,6 +34,7 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 		$this->postCreator->create($this, [
 			'message' => Input::get('message'),
+			'platform' => Input::get('platform'),
 			'organization' => 1,
 			'user' => Auth::user()->id,
 			'picture' => Input::get('upload_original_name')

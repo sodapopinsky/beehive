@@ -239,7 +239,7 @@ $(function(){
   $('[data-popover="popover"]').popover();
 
   /*NanoScroller*/      
-  $(".nscroller").nanoScroller();     
+  /*$(".nscroller").nanoScroller();  */   
 
 
   /*Bind plugins on hidden elements*/
