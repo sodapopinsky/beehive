@@ -135,6 +135,7 @@
   <script type="text/javascript" src="js/jquery.gritter/js/jquery.gritter.js"></script>
   <script type="text/javascript" src="js/behaviour/core.js"></script>
   <script type="text/javascript" src="js/jquery.upload/js/jquery.fileupload.js"></script>
+ <!--<script type="text/javascript" src="js/jquery.upload/js/jquery.fileupload-validate.js"></script>-->
   <script src="js/jquery.leanModal.min.js"></script>
 
 <!-- Bootstrap core JavaScript

@@ -51,7 +51,7 @@
          <td>
           <?php 
           if($post->picture != null){ ?>
-          <img style="float:left;" width="75" height="75" src="{{$s3->getObjectUrl(Config::get('constants.photosBucket'),$post->picture,'+120 minutes')}}">
+          <img style="float:left;" width="75" height="75" src="{{$s3->getObjectUrl(Config::get('constants.photosBucket'),$post->id,'+120 minutes')}}">
           <?php
           } 
           ?>

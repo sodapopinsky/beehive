@@ -55,7 +55,7 @@ class TwitterController extends BaseController implements ProposedPostCreatorLis
 
 		
 		if($post->picture != null){
-/*
+
 			$s3 = Aws\S3\S3Client::factory(array(
 				'key'    => Config::get('constants.amazonS3Key'),
 				'secret' => Config::get('constants.amazonS3Secret')
@@ -69,7 +69,12 @@ class TwitterController extends BaseController implements ProposedPostCreatorLis
     'Key' => $post->id,
     'MetadataDirective' => 'REPLACE',
     ));
-    */
+
+			$s3->deleteObject(array(
+				'Bucket' => Config::get('constants.photosBucket'),
+    'Key' => $post->picture,
+    ));
+    
 
 		}	
 

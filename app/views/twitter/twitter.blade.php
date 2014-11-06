@@ -38,6 +38,7 @@ $policy = '{
             ]
         }';
 
+
 $base64Policy = base64_encode($policy);
 $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output = true));
       
@@ -68,8 +69,10 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
 <form action="twitter/doproposetweet" method="POST" id="processform">
     <input type="hidden" name="upload_original_name" id="upload_original_name" />
       <input type="hidden" name="platform" value="twitter" />
-      <input type="text" name="message" class="form-control" onkeydown="if(event.keyCode == 13) return false;"  style="margin-left:100px; width:400px; height:75px;">
-              <input id="btnSubmitForm" class="btn btn-primary" type="submit" style="margin-top:15px;">
+       <textarea class="form-control" name="message" id="message" rows="5" id="comment"  style="margin-left:100px; width:400px; height:75px;" onkeyup="handleText()"></textarea>
+     
+   
+              <input id="btnSubmitForm" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
 
 </form>
 </div>
@@ -103,7 +106,7 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
          <td>
           <?php 
           if($post->picture != null){ ?>
-          <img style="float:left;" width="75" height="75" src="{{$s3->getObjectUrl(Config::get('constants.photosBucket'),$post->picture,'+120 minutes')}}">
+          <img style="float:left;" width="75" height="75" src="{{$s3->getObjectUrl(Config::get('constants.photosBucket'),$post->id,'+120 minutes')}}">
           <?php
           } 
           ?>
@@ -142,17 +145,43 @@ $("#goUpload").leanModal();
 
 
 <script>
+
+function handleText(){
+
+
+if($("#message").val().length > 0){
+  
+  $("#btnSubmitForm").prop("disabled",false);
+}
+else{
+    
+    $("#btnSubmitForm").prop("disabled",true);
+}
+
+}
 $(document).ready( function() {
 
-    $('.direct-upload').each( function() {
-        alert('here');
-        var form = $(this);
+        
+        var form =  $('.direct-upload');
 
         form.fileupload({
             url: form.attr('action'),
             type: 'POST',
             datatype: 'xml',
             add: function (event, data) {
+
+       var goUpload = true;
+        var uploadFile = data.files[0];
+        if (!(/\.(gif|jpg|jpeg|tiff|png)$/i).test(uploadFile.name)) {
+            alert('Please select an image file');
+            goUpload = false;
+        }
+         if (uploadFile.size > 2000000) { // 2mb
+           alert('Please upload a smaller image, max size is 2 MB');
+            goUpload = false;
+        }
+
+  if (goUpload == true) {
                   $("#btnSubmitForm").prop("disabled",true);
         var reader = new FileReader();
         reader.onload = function(event) {
@@ -166,7 +195,9 @@ $(document).ready( function() {
                 };
 
                 // Submit
-                data.submit();
+              
+            data.submit();
+        }
             },
             send: function(e, data) {
 
@@ -191,13 +222,12 @@ $(document).ready( function() {
                      $('#upload_original_name').val(data.originalFiles[0].name);
    $("#btnSubmitForm").prop("disabled",false);
 
-                       
-                         
-               //  $( "#processform" ).submit();
+          
               
-            },
+            }
+
         });
-    });
+    
 });
 </script>
 @stop
