@@ -5,7 +5,8 @@ use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
 ?>
 <div id="overlay_form">
- <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" class="direct-upload">
+ <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" 
+ class="direct-upload">
     <!-- We'll specify these variables with PHP -->
     <!-- Note: Order of these is Important -->
     <input type="hidden" name="key" value="${filename}">
@@ -29,7 +30,8 @@ use Facebook\FacebookSession;
 <form action="twitter/doproposetweet" method="POST" id="processform">
     <input type="hidden" name="upload_original_name" id="upload_original_name" />
       <input type="hidden" name="platform" value="twitter" />
-       <textarea class="form-control" name="message" id="message" rows="5" id="comment"  style="margin-left:100px; width:400px; height:75px;" onkeyup="handleText()"></textarea>
+       <textarea class="form-control" name="message" id="message" rows="5" id="comment"  style="margin-left:100px; 
+       width:400px; height:75px;" onkeyup="handleText()"></textarea>
      
    
               <input id="btnSubmitForm" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
@@ -46,62 +48,42 @@ use Facebook\FacebookSession;
 
   <div class="row">
   <div class="col-md-12">
+<div class="block-flat">
+ <div class="header">
+          <h3>Recent Posts</h3>
 
- <?php
-// see if we have a session
-                 if ( isset( $session ) ) {
+ </div>
 
-  // save the session
-                  $_SESSION['fb_token'] = $session->getToken();
-  // create a session using saved token or the new one we generated at login
-                  $session = new FacebookSession( $session->getToken() );
-
-  // graph api request for user data
-  //$request = new FacebookRequest( $session, 'GET', '/me' );
-                  $request = new FacebookRequest( $session, 'GET', '/theatomicburger/posts' );
-
-                  $response = $request->execute();
-  // get response
-                  $graphObject = $response->getGraphObject()->asArray();
-                  $i=0;
-                  foreach($graphObject['data'] as $object){
-
-                   if(isset($object->message)){
-                    $i++;
-                    ?>
-                    <tr>
-
-                      <td>
+@if(isset($graphObject))
+ <table>
+  @foreach($graphObject['data'] as $object)
+      @if(isset($object->message))
+        <tr>
+              <td>
                        @if(isset($object->picture))
-                       <img src="{{$object->picture}}" width="35" height="35">
+                       <img src="{{$object->picture}}" width="40" height="40">
                        @endif
                      </td>
                      @if(isset($object->link))
 
                      @endif
-                     <td><div><a href="{{$object->actions[0]->link}}">{{$object->message}}</a></div><div class="small">{{date("M d Y h:ia",strtotime($object->created_time));}}</div></td>
+                     <td><div><a href="{{$object->actions[0]->link}}">{{$object->message}}</a></div><div 
+                     class="small">{{date("M d Y h:ia",strtotime($object->created_time));}}</div></td>
                      <td>{{count($object->likes->data)}}
                      </td>
-                   </tr>
-                   <?php
+         </tr>
+      @endif
+  @endforeach
+</table>
+@else
 
-                   if($i>=5)
-                    break;
+<a class="btn btn-facebook" href="{{ $helper->getLoginUrl( array( 'email', 'user_friends',
+                'manage_pages' ) )}} "><i class="fa fa-facebook"></i> | Connect with Facebook</a>
 
-                }
-
-
-              }
-
-
-            } else {
-  // show login url
-              echo '<a href="' . $helper->getLoginUrl( array( 'email', 'user_friends','manage_pages' ) ) . '">Login</a>';
-            }
-
-            ?>
+@endif
 
 
+</div>
   </div>
     <div class="col-md-12">
       <div class="block-flat">
@@ -124,14 +106,16 @@ use Facebook\FacebookSession;
          <td>
           <?php 
           if($post->picture != null){ ?>
-          <img style="float:left;" width="75" height="75" src="{{$s3->getObjectUrl(Config::get('constants.photosBucket'),$post->id,'+120 minutes')}}">
+          <img style="float:left;" width="75" height="75" src="{{$s3->getObjectUrl(Config::get('constants.photosBucket')
+          ,$post->id,'+120 minutes')}}">
           <?php
           } 
           ?>
         
          <div style="float:left; margin-left:10px;">
           <div>{{ $post->message }}</div>
-         <div class="small">shared by {{$post->user()->first()->firstName . " " .$post->user()->first()->lastName}} on {{$post->created_at}}</div>
+         <div class="small">shared by {{$post->user()->first()->firstName . " " .$post->user()->first()->lastName}} on
+          {{$post->created_at}}</div>
        </div>
           <div class="clearfix"></div>
        </td>

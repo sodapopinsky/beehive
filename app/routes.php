@@ -12,9 +12,10 @@
 */
 
 
-Route::get('/', 'UsersController@index');
 Route::get('logout', 'AuthController@doLogout');
 Route::group(['before' => 'auth'], function() {
+	
+Route::get('/', 'UsersController@index');
 Route::get('user', 'UsersController@index');
 
 //Facebook

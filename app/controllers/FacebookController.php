@@ -69,6 +69,32 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 
 
+
+       
+// see if we have a session
+                 if ( isset( $session ) ) {
+
+  // save the session
+                  $_SESSION['fb_token'] = $session->getToken();
+  // create a session using saved token or the new one we generated at login
+                  $session = new FacebookSession( $session->getToken() );
+
+  // graph api request for user data
+  //$request = new FacebookRequest( $session, 'GET', '/me' );
+                  $request = new FacebookRequest( $session, 'GET', '/theatomicburger/posts' );
+
+                  $response = $request->execute();
+  // get response
+                  $graphObject = $response->getGraphObject()->asArray();
+
+            } else {
+              $graphObject = null;
+            }
+
+            
+
+
+
 		$proposedPosts = ProposedPost::orderBy('created_at', 'DESC')->where('platform','facebook')->paginate(5);
 
 		$bucket = Config::get('constants.photosBucket');
@@ -110,7 +136,7 @@ $base64Policy = base64_encode($policy);
 $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output = true));
 
 
-		$this->view('facebook.facebook',compact('helper','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
+		$this->view('facebook.facebook',compact('graphObject','helper','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
 	
 
 
