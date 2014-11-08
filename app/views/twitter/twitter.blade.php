@@ -1,49 +1,6 @@
 @extends('layouts.base')
 @section('css')
 
-<?php
-$bucket = Config::get('constants.photosBucket');
-$accesskey = Config::get('constants.amazonS3Key');
-$secret = Config::get('constants.amazonS3Secret');
-
-        $s3 = Aws\S3\S3Client::factory(array(
-    'key'    => Config::get('constants.amazonS3Key'),
-    'secret' => Config::get('constants.amazonS3Secret')
-));
-
- 
-
-          
-$now = strtotime(date("Y-m-d\TG:i:s"));
-$expire = date('Y-m-d\TG:i:s\Z', strtotime('+30 minutes', $now));
-$policy = '{
-            "expiration": "' . $expire . '",
-            "conditions": [
-                {
-                    "bucket": "' . $bucket . '"
-                },
-                {
-                    "acl": "private"
-
-                },
-                
-                [
-                    "starts-with",
-                    "$key",
-                    ""
-                ],
-                {
-                    "success_action_status": "201"
-                }
-            ]
-        }';
-
-
-$base64Policy = base64_encode($policy);
-$signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output = true));
-      
-?>
-
 <div id="overlay_form">
  <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" class="direct-upload">
     <!-- We'll specify these variables with PHP -->
@@ -113,7 +70,7 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
         
          <div style="float:left; margin-left:10px;">
           <div>{{ $post->message }}</div>
-         <div class="small">shared on {{$post->created_at}}</div>
+         <div class="small">shared by {{$post->user()->first()->firstName . " " .$post->user()->first()->lastName}} on {{$post->created_at}}</div>
        </div>
           <div class="clearfix"></div>
        </td>
@@ -138,97 +95,6 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
 @stop
 
 @section('js')
-<script type="text/javascript">
-$("#goUpload").leanModal();
-
-</script>
-
-
-<script>
-
-function handleText(){
-
-
-if($("#message").val().length > 0){
-  
-  $("#btnSubmitForm").prop("disabled",false);
-}
-else{
-    
-    $("#btnSubmitForm").prop("disabled",true);
-}
-
-}
-$(document).ready( function() {
-
-        
-        var form =  $('.direct-upload');
-
-        form.fileupload({
-            url: form.attr('action'),
-            type: 'POST',
-            datatype: 'xml',
-            add: function (event, data) {
-
-       var goUpload = true;
-        var uploadFile = data.files[0];
-        if (!(/\.(gif|jpg|jpeg|tiff|png)$/i).test(uploadFile.name)) {
-            alert('Please select an image file');
-            goUpload = false;
-        }
-         if (uploadFile.size > 2000000) { // 2mb
-           alert('Please upload a smaller image, max size is 2 MB');
-            goUpload = false;
-        }
-
-  if (goUpload == true) {
-                  $("#btnSubmitForm").prop("disabled",true);
-        var reader = new FileReader();
-        reader.onload = function(event) {
-          $('#imgPreview').attr('src', event.target.result);
-        }
-        reader.readAsDataURL(data.files[0]);
-                 //$('.progress').css('visibility', 'visible');
-                // Message on unLoad.
-                window.onbeforeunload = function() {
-                    return 'Upload Not Complete';
-                };
-
-                // Submit
-              
-            data.submit();
-        }
-            },
-            send: function(e, data) {
-
-                // onSend
-            },
-            progress: function(e, data){
-                // This is what makes everything really cool, thanks to that callback
-                // you can now update the progress bar based on the upload progress.
-                var percent = Math.round((data.loaded / data.total) * 100);
-                $('.bar').css('width', percent + '%');
-            },
-            fail: function(e, data) {
-                // Remove 'unsaved changes' message.
-                window.onbeforeunload = null;
-            },
-            success: function(data) {
-                // onSuccess
-            },
-            done: function (event, data) {
-                  window.onbeforeunload = null;
-                 
-                     $('#upload_original_name').val(data.originalFiles[0].name);
-   $("#btnSubmitForm").prop("disabled",false);
-
-          
-              
-            }
-
-        });
-    
-});
-</script>
+ <script src="js/pages/twitter.js"></script>
 @stop
 

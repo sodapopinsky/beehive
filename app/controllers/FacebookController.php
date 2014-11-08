@@ -4,7 +4,9 @@ use NS\ProposedPosts\ProposedPostCreator;
 use NS\ProposedPosts\ProposedPost;
 use NS\ProposedPosts\ProposedPostCreatorListener;
 use NS\ProposedPosts\ProposedPostRepository;
-
+use Facebook\FacebookSession;
+          use Facebook\FacebookRedirectLoginHelper;
+          use Facebook\FacebookRequest;
 
 class FacebookController extends BaseController implements ProposedPostCreatorListener {
 
@@ -24,8 +26,94 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 	public function index()
 	{
+		session_start(); 
+
+		 FacebookSession::setDefaultApplication('801125503264512', '43011e6e224645a7c5a40c69b729379c');
+
+
+// login helper with redirect_uri
+          $helper = new FacebookRedirectLoginHelper( 'http://localhost:8000/facebook' );
+
+// see if a existing session exists
+          if ( isset( $_SESSION ) && isset( $_SESSION['fb_token'] ) ) {
+  // create new session from saved access_token
+            $session = new FacebookSession( $_SESSION['fb_token'] );
+
+  // validate the access_token to make sure it's still valid
+            try {
+              if ( !$session->validate() ) {
+                $session = null;
+              }
+            } catch ( Exception $e ) {
+    // catch any exceptions
+              $session = null;
+            }
+          }  
+
+          if ( !isset( $session ) || $session === null ) {
+  // no session exists
+
+            try {
+              $session = $helper->getSessionFromRedirect();
+            } catch( FacebookRequestException $ex ) {
+    // When Facebook returns an error
+    // handle this better in production code
+              print_r( $ex );
+            } catch( Exception $ex ) {
+    // When validation fails or other local issues
+    // handle this better in production code
+              print_r( $ex );
+            }
+
+          }
+
+
+
 		$proposedPosts = ProposedPost::orderBy('created_at', 'DESC')->where('platform','facebook')->paginate(5);
-		$this->view('facebook.facebook',compact('proposedPosts'));
+
+		$bucket = Config::get('constants.photosBucket');
+$accesskey = Config::get('constants.amazonS3Key');
+$secret = Config::get('constants.amazonS3Secret');
+
+        $s3 = Aws\S3\S3Client::factory(array(
+    'key'    => Config::get('constants.amazonS3Key'),
+    'secret' => Config::get('constants.amazonS3Secret')
+));
+
+           
+$now = strtotime(date("Y-m-d\TG:i:s"));
+$expire = date('Y-m-d\TG:i:s\Z', strtotime('+30 minutes', $now));
+$policy = '{
+            "expiration": "' . $expire . '",
+            "conditions": [
+                {
+                    "bucket": "' . $bucket . '"
+                },
+                {
+                    "acl": "private"
+
+                },
+                
+                [
+                    "starts-with",
+                    "$key",
+                    ""
+                ],
+                {
+                    "success_action_status": "201"
+                }
+            ]
+        }';
+
+
+$base64Policy = base64_encode($policy);
+$signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output = true));
+
+
+		$this->view('facebook.facebook',compact('helper','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
+	
+
+
 	}
 
 

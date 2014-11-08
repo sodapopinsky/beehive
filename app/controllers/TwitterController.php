@@ -25,7 +25,47 @@ class TwitterController extends BaseController implements ProposedPostCreatorLis
 	public function index()
 	{
 		$proposedPosts = ProposedPost::orderBy('created_at', 'DESC')->where('platform','twitter')->paginate(5);
-		$this->view('twitter.twitter',compact('proposedPosts'));
+
+		$bucket = Config::get('constants.photosBucket');
+$accesskey = Config::get('constants.amazonS3Key');
+$secret = Config::get('constants.amazonS3Secret');
+
+        $s3 = Aws\S3\S3Client::factory(array(
+    'key'    => Config::get('constants.amazonS3Key'),
+    'secret' => Config::get('constants.amazonS3Secret')
+));
+
+           
+$now = strtotime(date("Y-m-d\TG:i:s"));
+$expire = date('Y-m-d\TG:i:s\Z', strtotime('+30 minutes', $now));
+$policy = '{
+            "expiration": "' . $expire . '",
+            "conditions": [
+                {
+                    "bucket": "' . $bucket . '"
+                },
+                {
+                    "acl": "private"
+
+                },
+                
+                [
+                    "starts-with",
+                    "$key",
+                    ""
+                ],
+                {
+                    "success_action_status": "201"
+                }
+            ]
+        }';
+
+
+$base64Policy = base64_encode($policy);
+$signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output = true));
+
+
+		$this->view('twitter.twitter',compact('proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
 	}
 
 
