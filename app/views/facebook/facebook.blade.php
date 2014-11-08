@@ -48,13 +48,18 @@ use Facebook\FacebookSession;
 
   <div class="row">
   <div class="col-md-12">
-
+<?php 
+ 
+      ?>
 
 
 
 @if(isset($graphObject))
-
-
+@if(isset($_SESSION['fb_currentUser']))
+<img style="float:left" src="http://graph.facebook.com/{{ $_SESSION['fb_currentUser']['id'] }}/picture">
+<div style="margin-left:60px;">  Connected to facebook as {{ $_SESSION['fb_currentUser']['name'] }}</div>
+<div style="margin-bottom:20px; margin-left:60px;"><a href="/facebook/disconnect">[disconnect]</a></div>
+@endif
 <div class="block-flat">
  <div class="header">
           <h3>Recent Posts</h3>
@@ -66,6 +71,7 @@ use Facebook\FacebookSession;
  <tr>
  <td></td>
  <td><b>Message</b></td>
+ <td><b>Like this</b></td>
  <td><b>Likes</b></td>
  </tr>
   @foreach($graphObject['data'] as $object)
@@ -84,6 +90,20 @@ use Facebook\FacebookSession;
                      class="small">{{date("M d Y h:ia",strtotime($object->created_time));}}</div></td>
                      <td>
                       @if(isset($object->likes))
+                      <?php $found = 0;?>
+                      @foreach($object->likes->data as $liker)
+                            @if($liker->id == $_SESSION['fb_currentUser']['id'])
+                            you likie <?php $found = 1;?>
+                      @endif 
+
+                      @endforeach
+                      @if($found == 0)
+                      like this
+                      @endif
+                      @endif
+                     </td>
+                     <td>
+                      @if(isset($object->likes))
                       {{count($object->likes->data)}}
                       @endif
                      </td>
@@ -95,8 +115,7 @@ use Facebook\FacebookSession;
 </div>
 @else
 
-<a class="btn btn-facebook" href="{{ $helper->getLoginUrl( array( 'email', 'user_friends',
-                'manage_pages' ) )}} "><i class="fa fa-facebook"></i> | Connect with Facebook</a>
+<a class="btn btn-facebook" href="{{ $loginUrl }} "><i class="fa fa-facebook"></i> | Connect with Facebook</a>
 
 @endif
 

@@ -20,9 +20,10 @@ Route::get('user', 'UsersController@index');
 
 //Facebook
 Route::get('facebook', 'FacebookController@index');
+Route::get('facebook/here', 'FacebookController@here');
 Route::get('doFacebookLogout', 'FacebookController@doFacebookLogout');
 Route::post('facebook/doproposepost', 'FacebookController@doProposePost');
-
+Route::get('facebook/disconnect', 'FacebookController@disconnectFacebook');
 
 //Twitter
 Route::get('twitter', 'TwitterController@index');

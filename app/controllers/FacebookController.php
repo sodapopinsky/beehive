@@ -5,8 +5,8 @@ use NS\ProposedPosts\ProposedPost;
 use NS\ProposedPosts\ProposedPostCreatorListener;
 use NS\ProposedPosts\ProposedPostRepository;
 use Facebook\FacebookSession;
-          use Facebook\FacebookRedirectLoginHelper;
-          use Facebook\FacebookRequest;
+use Facebook\FacebookRedirectLoginHelper;
+use Facebook\FacebookRequest;
 
 class FacebookController extends BaseController implements ProposedPostCreatorListener {
 
@@ -24,22 +24,28 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 		$this->postCreator = $postCreator;
 	}
 
+public function here(){
+		session_start(); 
+	print_r($_SESSION);
+}
 	public function index()
 	{
 		session_start(); 
 
 		 FacebookSession::setDefaultApplication('801125503264512', '43011e6e224645a7c5a40c69b729379c');
-//unset($_SESSION['fb_token']);
-
+ 
 
 // login helper with redirect_uri
-          $helper = new FacebookRedirectLoginHelper( 'http://localhost:8000/facebook' );
 
+          $helper = new FacebookRedirectLoginHelper( 'http://localhost:8000/facebook' );
+       
 // see if a existing session exists
+
           if ( isset( $_SESSION ) && isset( $_SESSION['fb_token'] ) ) {
   // create new session from saved access_token
             $session = new FacebookSession( $_SESSION['fb_token'] );
 
+	
   // validate the access_token to make sure it's still valid
             try {
               if ( !$session->validate() ) {
@@ -55,6 +61,7 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
   // no session exists
 
             try {
+
               $session = $helper->getSessionFromRedirect();
             } catch( FacebookRequestException $ex ) {
     // When Facebook returns an error
@@ -71,22 +78,25 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 
 
-
        
 // see if we have a session
                  if ( isset( $session ) ) {
 
+		
   // save the session
                   $_SESSION['fb_token'] = $session->getToken();
   // create a session using saved token or the new one we generated at login
                   $session = new FacebookSession( $session->getToken() );
 
-  // graph api request for user data
-  //$request = new FacebookRequest( $session, 'GET', '/me' );
-                  $request = new FacebookRequest( $session, 'GET', '/theatomicburger/posts' );
-
+// graph api request for user data
+  				if(!isset($_SESSION['fb_currentUser'])){
+                  $request = new FacebookRequest( $session, 'GET', '/me' );
                   $response = $request->execute();
-  // get response
+                  $_SESSION['fb_currentUser'] =  $response->getGraphObject()->asArray();
+              }
+  // graph api request for page data
+                  $request = new FacebookRequest( $session, 'GET', '/theatomicburger/posts' );
+                  $response = $request->execute();
                   $graphObject = $response->getGraphObject()->asArray();
 
             } else {
@@ -137,8 +147,12 @@ $policy = '{
 $base64Policy = base64_encode($policy);
 $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output = true));
 
+  $scope = array('publish_actions','email', 'user_friends',
+                'manage_pages');
+      $loginUrl = $helper->getLoginUrl($scope);
 
-		$this->view('facebook.facebook',compact('graphObject','helper','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
+      
+		$this->view('facebook.facebook',compact('helper','graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
 	
 
 
@@ -160,7 +174,12 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
 		return Redirect::action('FacebookController@index'); 
 
 	}
-
+public function disconnectFacebook(){
+		session_start(); 
+	  unset($_SESSION['fb_token']);
+      unset($_SESSION['fb_currentUser']);
+      return Redirect::action('FacebookController@index'); 
+}
 
 	public function doFacebookLogout(){
 		session_start();
