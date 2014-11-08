@@ -48,15 +48,28 @@ use Facebook\FacebookSession;
 
   <div class="row">
   <div class="col-md-12">
+
+
+
+
+@if(isset($graphObject))
+
+
 <div class="block-flat">
  <div class="header">
           <h3>Recent Posts</h3>
 
  </div>
 
-@if(isset($graphObject))
+
  <table>
+ <tr>
+ <td></td>
+ <td><b>Message</b></td>
+ <td><b>Likes</b></td>
+ </tr>
   @foreach($graphObject['data'] as $object)
+
       @if(isset($object->message))
         <tr>
               <td>
@@ -69,12 +82,17 @@ use Facebook\FacebookSession;
                      @endif
                      <td><div><a href="{{$object->actions[0]->link}}">{{$object->message}}</a></div><div 
                      class="small">{{date("M d Y h:ia",strtotime($object->created_time));}}</div></td>
-                     <td>{{count($object->likes->data)}}
+                     <td>
+                      @if(isset($object->likes))
+                      {{count($object->likes->data)}}
+                      @endif
                      </td>
          </tr>
       @endif
+
   @endforeach
 </table>
+</div>
 @else
 
 <a class="btn btn-facebook" href="{{ $helper->getLoginUrl( array( 'email', 'user_friends',
@@ -83,7 +101,7 @@ use Facebook\FacebookSession;
 @endif
 
 
-</div>
+
   </div>
     <div class="col-md-12">
       <div class="block-flat">

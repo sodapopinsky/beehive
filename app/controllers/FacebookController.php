@@ -29,6 +29,7 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 		session_start(); 
 
 		 FacebookSession::setDefaultApplication('801125503264512', '43011e6e224645a7c5a40c69b729379c');
+//unset($_SESSION['fb_token']);
 
 
 // login helper with redirect_uri
@@ -66,6 +67,7 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
             }
 
           }
+
 
 
 
