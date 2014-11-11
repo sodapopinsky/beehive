@@ -151,8 +151,6 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
                 'manage_pages');
       $loginUrl = $helper->getLoginUrl($scope);
 
-$graphObject = Paginator::make($graphObject, count($graphObject), 5);
-
       
 		$this->view('facebook.facebook',compact('helper','graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
 	
