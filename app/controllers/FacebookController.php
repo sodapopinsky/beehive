@@ -95,7 +95,7 @@ public function here(){
                   $_SESSION['fb_currentUser'] =  $response->getGraphObject()->asArray();
               }
   // graph api request for page data
-                  $request = new FacebookRequest( $session, 'GET', '/theatomicburger/posts' );
+                  $request = new FacebookRequest( $session, 'GET', '/theatomicburger/posts?limit=10' ); //need to implement pagination
                   $response = $request->execute();
                   $graphObject = $response->getGraphObject()->asArray();
 
@@ -151,13 +151,18 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
                 'manage_pages');
       $loginUrl = $helper->getLoginUrl($scope);
 
-      
+ 
+
 		$this->view('facebook.facebook',compact('helper','graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
 	
 
 
 	}
 
+public function likePost(){
+
+return Redirect::action('FacebookController@index'); 
+}
 
 	public function doProposePost()
 	{
