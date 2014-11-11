@@ -24,9 +24,9 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 		$this->postCreator = $postCreator;
 	}
 
-public function here(){
+public function likePost(){
 		session_start(); 
-	print_r($_SESSION);
+	 return Redirect::action('FacebookController@index'); 
 }
 	public function index()
 	{
@@ -74,9 +74,6 @@ public function here(){
             }
 
           }
-
-
-
 
        
 // see if we have a session
@@ -151,7 +148,7 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
                 'manage_pages');
       $loginUrl = $helper->getLoginUrl($scope);
 
-      
+
 		$this->view('facebook.facebook',compact('helper','graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
 	
 

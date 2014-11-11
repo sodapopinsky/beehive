@@ -71,7 +71,7 @@ use Facebook\FacebookSession;
  <tr>
  <td></td>
  <td><b>Message</b></td>
- <td><b>Like this</b></td>
+ <td></td>
  <td><b>Likes</b></td>
  </tr>
   @foreach($graphObject['data'] as $object)
@@ -98,7 +98,7 @@ use Facebook\FacebookSession;
 
                       @endforeach
                       @if($found == 0)
-                      like this
+                      <form action="/facebook/likepost" method="post"><input type="submit" class="btn btn-primary" value="like"></form>
                       @endif
                       @endif
                      </td>
