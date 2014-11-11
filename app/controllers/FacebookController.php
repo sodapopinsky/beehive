@@ -24,67 +24,18 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 		$this->postCreator = $postCreator;
 	}
 
-public function here(){
-		session_start(); 
-	print_r($_SESSION);
-}
+
 	public function index()
 	{
 		session_start(); 
 
-		 FacebookSession::setDefaultApplication('801125503264512', '43011e6e224645a7c5a40c69b729379c');
- 
+		$session = $this->getFacebookSession();
 
-// login helper with redirect_uri
-
-          $helper = new FacebookRedirectLoginHelper( 'http://localhost:8000/facebook' );
-       
-// see if a existing session exists
-
-          if ( isset( $_SESSION ) && isset( $_SESSION['fb_token'] ) ) {
-  // create new session from saved access_token
-            $session = new FacebookSession( $_SESSION['fb_token'] );
-
-	
-  // validate the access_token to make sure it's still valid
-            try {
-              if ( !$session->validate() ) {
-                $session = null;
-              }
-            } catch ( Exception $e ) {
-    // catch any exceptions
-              $session = null;
-            }
-          }  
-
-          if ( !isset( $session ) || $session === null ) {
-  // no session exists
-
-            try {
-
-              $session = $helper->getSessionFromRedirect();
-            } catch( FacebookRequestException $ex ) {
-    // When Facebook returns an error
-    // handle this better in production code
-              print_r( $ex );
-            } catch( Exception $ex ) {
-    // When validation fails or other local issues
-    // handle this better in production code
-              print_r( $ex );
-            }
-
-          }
-
-
-
-
-       
 // see if we have a session
                  if ( isset( $session ) ) {
 
-		
   // save the session
-                  $_SESSION['fb_token'] = $session->getToken();
+                 $_SESSION['fb_token'] = $session->getToken();
   // create a session using saved token or the new one we generated at login
                   $session = new FacebookSession( $session->getToken() );
 
@@ -98,6 +49,9 @@ public function here(){
                   $request = new FacebookRequest( $session, 'GET', '/theatomicburger/posts?limit=10' ); //need to implement pagination
                   $response = $request->execute();
                   $graphObject = $response->getGraphObject()->asArray();
+
+              
+               
 
             } else {
               $graphObject = null;
@@ -149,22 +103,96 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
 
   $scope = array('publish_actions','email', 'user_friends',
                 'manage_pages');
+  $helper = new FacebookRedirectLoginHelper( 'http://localhost:8000/facebook' );
       $loginUrl = $helper->getLoginUrl($scope);
 
  
 
-		$this->view('facebook.facebook',compact('helper','graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
+		$this->view('facebook.facebook',compact('graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
 	
 
 
 	}
 
-public function likePost(){
+public function getFacebookSession(){
 
-return Redirect::action('FacebookController@index'); 
+		 FacebookSession::setDefaultApplication('801125503264512', '43011e6e224645a7c5a40c69b729379c');
+ 
+
+// login helper with redirect_uri
+
+          $helper = new FacebookRedirectLoginHelper( 'http://localhost:8000/facebook' );
+       
+// see if a existing session exists
+
+          if ( isset( $_SESSION ) && isset( $_SESSION['fb_token'] ) ) {
+  // create new session from saved access_token
+            $session = new FacebookSession( $_SESSION['fb_token'] );
+
+	
+  // validate the access_token to make sure it's still valid
+            try {
+              if ( !$session->validate() ) {
+                $session = null;
+              }
+            } catch ( Exception $e ) {
+    // catch any exceptions
+              $session = null;
+            }
+          }  
+
+          if ( !isset( $session ) || $session === null ) {
+  // no session exists
+
+            try {
+
+              $session = $helper->getSessionFromRedirect();
+            } catch( FacebookRequestException $ex ) {
+    // When Facebook returns an error
+    // handle this better in production code
+              print_r( $ex );
+            } catch( Exception $ex ) {
+    // When validation fails or other local issues
+    // handle this better in production code
+              print_r( $ex );
+            }
+
+          }
+return $session;
 }
 
-	public function doProposePost()
+
+public function likePost(){
+
+	session_start(); 
+
+	$session = $this->getFacebookSession();
+
+
+	  if ( isset( $session ) ) {
+
+  // save the session
+                 $_SESSION['fb_token'] = $session->getToken();
+  // create a session using saved token or the new one we generated at login
+                  $session = new FacebookSession( $session->getToken() );
+
+  // graph api request for page data
+                  $endpoint = '/303058509888806/likes?access_token=' . $session->getToken();
+                //  echo $endpoint;
+                  $postID = Input::get('postID');
+           $request = new FacebookRequest( $session, 'POST', '/'.$postID.'/likes'); 
+           
+                 $response = $request->execute();
+              //    $graphObject = $response->getGraphObject()->asArray();
+            } 
+
+return Redirect::action('FacebookController@index'); 
+
+}
+
+
+public function doProposePost()
+
 	{
 
 		$this->postCreator->create($this, [

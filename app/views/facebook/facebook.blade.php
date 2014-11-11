@@ -98,7 +98,10 @@ use Facebook\FacebookSession;
 
                       @endforeach
                       @if($found == 0)
-                      <form action="/facebook/likepost" method="post"><input type="submit" class="btn btn-primary" value="like"></form>
+                      <form action="/facebook/likepost" method="post">
+                     
+                      <input type="hidden" name="postID" value="{{$object->id}}">
+                      <input type="submit" class="btn btn-primary" value="like"></form>
                       @endif
                       @endif
                      </td>
