@@ -35,3 +35,6 @@ Route::get('createrootuser', 'UsersController@createRootUser');
 Route::get('login', 'AuthController@getLogin');
 Route::post('login', 'AuthController@doLogin');
 
+
+Route::any('{all}', 'FacebookController@index')->where('all', '.*');
+
