@@ -31,6 +31,13 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 		$session = $this->getFacebookSession();
 
+$abtest = "382316005227557";
+$ab = "157606107767381";
+
+	  
+
+
+
 // see if we have a session
                  if ( isset( $session ) ) {
 
@@ -46,11 +53,40 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
                   $_SESSION['fb_currentUser'] =  $response->getGraphObject()->asArray();
               }
   // graph api request for page data
-                  $request = new FacebookRequest( $session, 'GET', '/theatomicburger/posts?limit=10' ); //need to implement pagination
+                  $request = new FacebookRequest( $session, 'GET', '/'.$abtest.'/feed'); //need to implement pagination
                   $response = $request->execute();
                   $graphObject = $response->getGraphObject()->asArray();
 
-              
+              $request = new FacebookRequest( $session, 'GET', '/me/permissions' );
+              $response = $request->execute();
+                  $permissions = $response->getGraphObject()->asArray();
+        
+            $request = new FacebookRequest( $session, 'GET', '/'.$_SESSION['fb_currentUser']['id'].'/accounts' );
+              $response = $request->execute();
+                  $accounts = $response->getGraphObject()->asArray();
+			
+
+$access_token = "1";
+foreach($accounts['data'] as $object){
+	if($object->id == $abtest){
+		$access_token = $object->access_token;
+	}
+
+  }
+
+/*
+              $request = new FacebookRequest(
+  $session,
+  'POST',
+  '/'.$abtest.'/feed',
+  array (
+    'message' => 'Test 2',
+    'access_token' => urlencode($access_token)
+  )
+);
+$response = $request->execute();
+$postresponse = $response->getGraphObject();
+*/
                
 
             } else {
@@ -108,7 +144,7 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
 
  
 
-		$this->view('facebook.facebook',compact('graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
+		$this->view('facebook.facebook',compact('permissions','accounts','graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
 	
 
 
@@ -160,6 +196,8 @@ public function getFacebookSession(){
           }
 return $session;
 }
+
+
 
 
 public function likePost(){

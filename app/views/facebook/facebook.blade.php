@@ -1,8 +1,11 @@
 @extends('layouts.base')
 @section('css')
 <?php
+
 use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
+
+
 ?>
 <div id="overlay_form">
  <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" 
@@ -48,9 +51,8 @@ use Facebook\FacebookSession;
 
   <div class="row">
   <div class="col-md-12">
-<?php 
- 
-      ?>
+
+}
 
 
 
@@ -74,6 +76,12 @@ use Facebook\FacebookSession;
  <td></td>
  <td><b>Likes</b></td>
  </tr>
+  <?php 
+ print_r($graphObject);
+
+ ?>
+ @if(isset($graphObject['data']))
+
   @foreach($graphObject['data'] as $object)
 
       @if(isset($object->message))
@@ -93,7 +101,10 @@ use Facebook\FacebookSession;
                       <?php $found = 0;?>
                       @foreach($object->likes->data as $liker)
                             @if($liker->id == $_SESSION['fb_currentUser']['id'])
-                            you likie <?php $found = 1;?>
+                            
+                            <i class="fa  fa-thumbs-o-up"></i><span>Liked</span>
+
+                            <?php $found = 1;?>
                       @endif 
 
                       @endforeach
@@ -101,7 +112,10 @@ use Facebook\FacebookSession;
                       <form action="/facebook/likepost" method="post">
                      
                       <input type="hidden" name="postID" value="{{$object->id}}">
-                      <input type="submit" class="btn btn-primary" value="like"></form>
+                     
+                      <button type="submit"> <i class="fa  fa-thumbs-o-up"></i><span>Like</span></button>
+
+                       </form>
                       @endif
                       @endif
                      </td>
@@ -114,6 +128,9 @@ use Facebook\FacebookSession;
       @endif
 
   @endforeach
+
+  
+  @endif
 </table>
 </div>
 @else

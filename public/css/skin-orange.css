@@ -1006,7 +1006,7 @@ input::-webkit-input-speech-button {
   border-top: 1px solid rgba(255, 255, 255, 0.04);
   display: block;
   padding: 14px 25px;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, .8);
   font-size: 13px;
   font-weight: 400;
   white-space: nowrap;
@@ -1027,7 +1027,7 @@ input::-webkit-input-speech-button {
   background-color: rgba(0, 0, 0, 0.1);
 }
 .cl-vnavigation li a:hover {
-  background-color: #22242b;
+   background-color: rgba(1, 1, 1, 0.5);
 }
 /*Collapsed Sidebar*/
 .sb-collapsed .cl-sidebar {

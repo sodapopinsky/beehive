@@ -35,13 +35,13 @@
 
 <div id="cl-wrapper">
 
-  <div class="cl-sidebar">
+  <div class="cl-sidebar" style="background-color:#ffa214;">
     <div class="cl-toggle"><i class="fa fa-bars"></i></div>
     <div class="cl-navblock">
       <div class="menu-space">
         <div class="content">
 
-           <div class="sidebar-logo">
+           <div class="sidebar-logo" style="background-color:#ffa214;">
             <div class="logo">
                 <a href="index2.html"></a>
             </div>
@@ -55,8 +55,8 @@
           </ul>
         </div>
       </div>
-      <div class="text-right collapse-button" style="padding:7px 9px;">
-       copyright 2014 Nicholas Spitale
+      <div class="text-right collapse-button" style="padding:7px 9px; background-color:#ffa214;">
+      
      
       </div>
     </div>
