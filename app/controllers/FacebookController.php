@@ -18,10 +18,15 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 	protected $posts;
 	protected $postCreator;
+	protected $pageID;
 
 	public function __construct(ProposedPostRepository $posts, ProposedPostCreator $postCreator){
 		$this->posts = $posts;
 		$this->postCreator = $postCreator;
+		$this->pageID = "382316005227557";
+		//$abtest = "382316005227557";
+		//$ab = "157606107767381";
+
 	}
 
 
@@ -31,20 +36,10 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 		$session = $this->getFacebookSession();
 
-$abtest = "382316005227557";
-$ab = "157606107767381";
-
-	  
-
-
 
 // see if we have a session
                  if ( isset( $session ) ) {
 
-  // save the session
-                 $_SESSION['fb_token'] = $session->getToken();
-  // create a session using saved token or the new one we generated at login
-                  $session = new FacebookSession( $session->getToken() );
 
 // graph api request for user data
   				if(!isset($_SESSION['fb_currentUser'])){
@@ -52,8 +47,15 @@ $ab = "157606107767381";
                   $response = $request->execute();
                   $_SESSION['fb_currentUser'] =  $response->getGraphObject()->asArray();
               }
+
+               // graph api request for page data
+                  $request = new FacebookRequest( $session, 'GET', '/'.$this->pageID.'/promotable_posts?is_published=false'); //need to implement pagination
+                  $response = $request->execute();
+                  $scheduledPosts = $response->getGraphObject()->asArray();
+
+
   // graph api request for page data
-                  $request = new FacebookRequest( $session, 'GET', '/'.$abtest.'/feed'); //need to implement pagination
+                  $request = new FacebookRequest( $session, 'GET', '/'.$this->pageID.'/feed'); //need to implement pagination
                   $response = $request->execute();
                   $graphObject = $response->getGraphObject()->asArray();
 
@@ -68,25 +70,13 @@ $ab = "157606107767381";
 
 $access_token = "1";
 foreach($accounts['data'] as $object){
-	if($object->id == $abtest){
+	if($object->id == $this->pageID){
 		$access_token = $object->access_token;
 	}
 
   }
 
-/*
-              $request = new FacebookRequest(
-  $session,
-  'POST',
-  '/'.$abtest.'/feed',
-  array (
-    'message' => 'Test 2',
-    'access_token' => urlencode($access_token)
-  )
-);
-$response = $request->execute();
-$postresponse = $response->getGraphObject();
-*/
+
                
 
             } else {
@@ -144,11 +134,51 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
 
  
 
-		$this->view('facebook.facebook',compact('permissions','accounts','graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
+		$this->view('facebook.facebook',compact('scheduledPosts','permissions','accounts','graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
 	
 
 
 	}
+
+public function schedulePost(){
+	session_start(); 
+	$session = $this->getFacebookSession();
+
+$scheduledTime = time() + (7 * 24 * 60 * 60); 
+
+        $request = new FacebookRequest( $session, 'GET', '/'.$_SESSION['fb_currentUser']['id'].'/accounts' );
+              $response = $request->execute();
+                  $accounts = $response->getGraphObject()->asArray();
+			
+
+$access_token = "1";
+foreach($accounts['data'] as $object){
+	if($object->id == $this->pageID){
+		$access_token = $object->access_token;
+	}
+
+  }
+
+
+              $request = new FacebookRequest(
+  $session,
+  'POST',
+  '/'.$this->pageID.'/photos',
+  array (
+    'message' => 'phototest2',
+    'access_token' => urlencode($access_token),
+    'scheduled_publish_time' => $scheduledTime,
+    'published' => false,
+    'url' => 'http://graph.facebook.com/squall3d/picture?type=large'
+  )
+);
+$response = $request->execute();
+$postresponse = $response->getGraphObject();
+
+return Redirect::action('FacebookController@index'); 
+
+}
+
 
 public function getFacebookSession(){
 
@@ -194,6 +224,12 @@ public function getFacebookSession(){
             }
 
           }
+if(isset($session)){
+           // save the session
+                 $_SESSION['fb_token'] = $session->getToken();
+  // create a session using saved token or the new one we generated at login
+                  $session = new FacebookSession( $session->getToken() );
+              }
 return $session;
 }
 

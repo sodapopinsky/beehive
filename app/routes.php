@@ -25,7 +25,7 @@ Route::get('doFacebookLogout', 'FacebookController@doFacebookLogout');
 Route::post('facebook/doproposepost', 'FacebookController@doProposePost');
 Route::get('facebook/disconnect', 'FacebookController@disconnectFacebook');
 Route::post('facebook/likepost', 'FacebookController@likePost');
-
+Route::post('facebook/schedulepost', 'FacebookController@schedulePost');
 
 //Twitter
 Route::get('twitter', 'TwitterController@index');

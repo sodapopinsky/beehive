@@ -1,5 +1,5 @@
 $("#goUpload").leanModal();
-
+$("#goShareIdea").leanModal();
 function handleText(){
 
 

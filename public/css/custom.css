@@ -10,7 +10,7 @@
   display: none;
 }
 
-#overlay_form {
+.overlay_form {
   width: 600px;
   padding: 20px;
   display: none;

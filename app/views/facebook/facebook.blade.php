@@ -1,13 +1,26 @@
 @extends('layouts.base')
 @section('css')
 <?php
-
+date_default_timezone_set('America/Chicago');
 use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
-
-
 ?>
-<div id="overlay_form">
+
+<div id="schedulePost" class="overlay_form">
+<h3 id="forms-control-disabled">Schedule a Post</h3>
+<form action="facebook/schedulepost" method="POST" id="processform">
+    <input type="hidden" name="upload_original_name" id="upload_original_name" />
+      <input type="hidden" name="platform" value="twitter" />
+       <textarea class="form-control" name="message" id="message" rows="5" id="comment"  style="margin-left:100px; 
+       width:400px; height:75px;" onkeyup="handleText()"></textarea>
+     
+   
+              <input id="btnSubmitForm" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
+
+</form>
+
+</div>
+<div id="shareIdea" class="overlay_form">
  <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" 
  class="direct-upload">
     <!-- We'll specify these variables with PHP -->
@@ -52,9 +65,6 @@ use Facebook\FacebookSession;
   <div class="row">
   <div class="col-md-12">
 
-}
-
-
 
 @if(isset($graphObject))
 @if(isset($_SESSION['fb_currentUser']))
@@ -62,12 +72,59 @@ use Facebook\FacebookSession;
 <div style="margin-left:60px;">  Connected to facebook as {{ $_SESSION['fb_currentUser']['name'] }}</div>
 <div style="margin-bottom:20px; margin-left:60px;"><a href="/facebook/disconnect">[disconnect]</a></div>
 @endif
+
+
+<div class="block-flat">
+
+<button class="btn btn-primary pull-right" id="goUpload" type="button" href="#schedulePost">Schedule a Post</button>
+ <div class="header">
+<h3>Scheduled Posts</h3>
+ </div>
+ <table>
+ <tr>
+ <td></td>
+ <td><b>Message</b></td>
+
+ </tr>
+
+@if(isset($scheduledPosts['data']))
+@foreach($scheduledPosts['data'] as $object)
+@if(isset($object->message))
+        <tr>
+              <td>
+                       @if(isset($object->picture))
+                       <img src="{{$object->picture}}" width="40" height="40">
+                       @endif
+                     </td>
+                     @if(isset($object->link))
+
+                     @endif
+                     <td><div><a href="{{$object->actions[0]->link}}">{{$object->message}}</a></div><div 
+                     class="small">Scheduled for {{ date("M d h:ia", $object->scheduled_publish_time) }}</div></td>
+                    
+                   
+         </tr>
+      @endif
+
+
+ @endforeach
+@endif
+ @if(count($scheduledPosts) == 0)
+    <div class="text-muted text-center" style="padding:30px;"> There are no posts scheduled</div>
+ @endif
+ </table>
+
+ </div>
+
+
 <div class="block-flat">
  <div class="header">
           <h3>Recent Posts</h3>
 
  </div>
 
+
+ <div>
 
  <table>
  <tr>
@@ -76,10 +133,7 @@ use Facebook\FacebookSession;
  <td></td>
  <td><b>Likes</b></td>
  </tr>
-  <?php 
- print_r($graphObject);
 
- ?>
  @if(isset($graphObject['data']))
 
   @foreach($graphObject['data'] as $object)
@@ -142,11 +196,12 @@ use Facebook\FacebookSession;
 
 
   </div>
+  </div>
     <div class="col-md-12">
       <div class="block-flat">
 
 
-      <button class="btn btn-primary pull-right" id="goUpload" type="button" href="#overlay_form">Share an Idea</button>
+      <button class="btn btn-primary pull-right" id="goShareIdea" type="button" href="#shareIdea">Share an Idea</button>
         <div class="header">
           <h3>Facebook Post Ideas</h3>
 
