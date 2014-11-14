@@ -40,8 +40,9 @@ use Facebook\FacebookSession;
 
   <div class="form-group" class="pull-left" style="width:80%; margin-left:5%;">
                 <div class="input-group date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="m/d/yyyy - HH:ii p" data-link-field="dtp_input1" style="width:200px;">
-                    <input class="form-control" size="16" type="text" value="Select a Date" readonly>
-            
+                    <input class="form-control" size="16" name="date" id="selectdate" type="text" value="Select a Date" readonly>
+                    <input type="hidden" id="timestamp" name="timestamp">
+      
           <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                 </div>
         <input type="hidden" id="dtp_input1" value="" />
@@ -104,7 +105,13 @@ use Facebook\FacebookSession;
   <div class="col-md-12">
 
    
- 
+ @if (Session::has('flashError'))
+  <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="fa fa-warning sign"></i>{{Session::get('flashError')}}
+               </div>
+ @endif
+
 
 
 
@@ -259,7 +266,7 @@ use Facebook\FacebookSession;
         <div class="content">
         <table class="table table-striped table-bordered bootstrap-datatable datatable">
           @if(count($proposedPosts) == 0)
-          <div class="text-muted text-center" style="padding:30px;"> You have not shared any tweet ideas</div>
+          <div class="text-muted text-center" style="padding:30px;"> You have not shared any post ideas</div>
           @endif
 
          @foreach($proposedPosts as $post)
@@ -305,6 +312,25 @@ use Facebook\FacebookSession;
  <script type="text/javascript">
 
 
+var d = new Date();
+
+
+var month = d.getMonth() + 1;
+var day = d.getDate();
+
+var start = d.getFullYear() + '-' +
+    ((''+month).length<2 ? '0' : '') + month + '-' +
+    ((''+day).length<2 ? '0' : '') + day;
+
+  d.setMonth(d.getMonth() + 3);
+
+  var month = d.getMonth() + 1;
+var day = d.getDate();
+
+var end = d.getFullYear() + '-' +
+    ((''+month).length<2 ? '0' : '') + month + '-' +
+    ((''+day).length<2 ? '0' : '') + day;
+
 
     $('.form_datetime').datetimepicker({
         //language:  'fr',
@@ -314,8 +340,24 @@ use Facebook\FacebookSession;
     todayHighlight: 1,
     startView: 2,
     forceParse: 0,
-        showMeridian: 1
-    });
+        showMeridian: 1,
+        startDate: start,
+       endDate: end
+    }).on('changeDate', function(ev){
+     var requiredTime = (d.getTimezoneOffset()*2000 + Math.round(+new Date() - d.getTimezoneOffset()*60*1000));
+    
+      if(ev.date.valueOf() < requiredTime){
+         $('#selectdate').val('Select a Date');
+         alert("Date of post must be at least 15 minutes from now");
+
+      }
+      else{
+         $('#timestamp').val(ev.date.valueOf() + Math.round(d.getTimezoneOffset()*60*1000));
+          
+      }
+      
+  
+});
   $('.form_date').datetimepicker({
         language:  'fr',
         weekStart: 1,
@@ -337,6 +379,8 @@ use Facebook\FacebookSession;
     maxView: 1,
     forceParse: 0
     });
+
+ 
 </script>
 
 

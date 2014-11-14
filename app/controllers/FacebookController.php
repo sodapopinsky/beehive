@@ -99,13 +99,18 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 
 	public function schedulePost(){
+date_default_timezone_set('America/Chicago');
+$t=time();
+$postTimestamp = Input::Get('timestamp') / 1000;
 
-
-		$session = $this->facebook->getSession();
-		$scheduledTime = time() + (7 * 24 * 60 * 60); 
-
-
-
+if($postTimestamp < ($t + 60*15) ){
+//Must be 15 minutes into future
+	Session::flash('flashError', 'Post must be scheduled at least 15 minutes from now.');
+return Redirect::action('FacebookController@index'); 
+	
+}
+	
+$session = $this->facebook->getSession();
 		$request = new FacebookRequest( $session, 'GET', '/'.$_SESSION['fb_currentUser']['id'].'/accounts' );
 		$response = $request->execute();
 		$accounts = $response->getGraphObject()->asArray();
@@ -135,7 +140,7 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 					'message' => Input::Get('message'),
 					'access_token' => urlencode($access_token),
 					'url' => $url,
-					 'scheduled_publish_time' => $scheduledTime,
+					 'scheduled_publish_time' => $postTimestamp,
    					 'published' => false,
 					)
 				);
@@ -152,6 +157,8 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 				array (
 					'message' => Input::Get('message'),
 					'access_token' => urlencode($access_token),
+					 'scheduled_publish_time' => $postTimestamp,
+   					 'published' => false,
 					)
 				);
 
@@ -163,6 +170,7 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 
 		return Redirect::action('FacebookController@index'); 
+		
 
 	}
 
@@ -173,9 +181,9 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 
 	public function likePost(){
 
-		session_start(); 
+	
 
-		$session = $this->getFacebookSession();
+		$session = $this->facebook->getSession();
 
 
 		if ( isset( $session ) ) {

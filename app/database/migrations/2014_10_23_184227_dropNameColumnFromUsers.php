@@ -26,7 +26,7 @@ class DropNameColumnFromUsers extends Migration {
 	public function down()
 	{
 		Schema::table('users', function($table) {
-			$table->string('name',60);
+			//$table->string('name',60);
 		});
 	}
 
