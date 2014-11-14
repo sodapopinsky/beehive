@@ -127,6 +127,7 @@
 
 
   <script src="js/jquery.js"></script>
+  <script src="js/core.js"></script>
   <script src="js/jquery.cookie/jquery.cookie.js"></script>
   <script src="js/jquery.pushmenu/js/jPushMenu.js"></script>
   <!--<script type="text/javascript" src="js/jquery.nanoscroller/jquery.nanoscroller.js"></script>-->

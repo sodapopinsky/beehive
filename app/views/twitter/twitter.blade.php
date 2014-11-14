@@ -1,7 +1,7 @@
 @extends('layouts.base')
 @section('css')
 
-<div id="overlay_form">
+<div id="shareIdea" class="overlay_form">
  <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" class="direct-upload">
     <!-- We'll specify these variables with PHP -->
     <!-- Note: Order of these is Important -->
@@ -26,10 +26,10 @@
 <form action="twitter/doproposetweet" method="POST" id="processform">
     <input type="hidden" name="upload_original_name" id="upload_original_name" />
       <input type="hidden" name="platform" value="twitter" />
-       <textarea class="form-control" name="message" id="message" rows="5" id="comment"  style="margin-left:100px; width:400px; height:75px;" onkeyup="handleText()"></textarea>
+       <textarea class="form-control" name="message" id="shareIdeaMessage" rows="5" id="comment"  style="margin-left:100px; width:400px; height:75px;" onkeyup="handleText('shareIdeaMessage','shareIdeaButton')"></textarea>
      
    
-              <input id="btnSubmitForm" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
+              <input id="shareIdeaButton" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
 
 </form>
 </div>
@@ -46,7 +46,7 @@
 			<div class="block-flat">
 
 
-			<button class="btn btn-primary pull-right" id="goUpload" type="button" href="#overlay_form">Share an Idea</button>
+			<button class="btn btn-primary pull-right" id="goUpload" type="button" href="#shareIdea">Share an Idea</button>
 				<div class="header">
 					<h3>Tweet Ideas</h3>
 

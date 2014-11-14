@@ -81,7 +81,7 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
 			]);
 
 
-		return Redirect::action('TwitterController@index'); 
+			return Redirect::action('TwitterController@index'); 
 
 	}
 
@@ -117,6 +117,7 @@ $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output
     
 
 		}	
+	
 
 	}
 

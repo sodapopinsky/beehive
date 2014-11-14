@@ -22,6 +22,10 @@ protected $title = '';
         $this->layout->content = View::make($path, $data);
     }
 
+    protected function dump($data){
+    	print_r($data);
+    }
+
  	protected function redirectBack($data = [])
     {
         return Redirect::back()->withInput()->with($data);

@@ -6,23 +6,46 @@ use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
 ?>
 
-<div id="schedulePost" class="overlay_form">
-<h3 id="forms-control-disabled">Schedule a Post</h3>
-<form action="facebook/schedulepost" method="POST" id="processform">
-    <input type="hidden" name="upload_original_name" id="upload_original_name" />
-      <input type="hidden" name="platform" value="twitter" />
-       <textarea class="form-control" name="message" id="message" rows="5" id="comment"  style="margin-left:100px; 
-       width:400px; height:75px;" onkeyup="handleText()"></textarea>
-     
-   
-              <input id="btnSubmitForm" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
 
+<div id="schedulePost" class="overlay_form">
+ <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" 
+ class="schedulepost-upload">
+    <!-- We'll specify these variables with PHP -->
+    <!-- Note: Order of these is Important -->
+    <input type="hidden" name="key" value="${filename}">
+    <input type="hidden" name="AWSAccessKeyId" value="<?php echo $accesskey; ?>">
+    <input type="hidden" name="acl" value="private">
+    <input type="hidden" name="success_action_status" value="201">
+    <input type="hidden" name="policy" value="<?php echo $base64Policy; ?>">
+    <input type="hidden" name="signature" value="<?php echo $signature; ?>">
+<h3 id="forms-control-disabled">Schedule a Facebook Post</h3>
+
+   <span class="fileinput-button" style="float:left; ">
+
+     <img id="schedulePostImg" class=""  height="75" width="75" src="images/image_placeholder.jpg">
+
+     <input type="file" name="file" class="btn" >
+
+   </span>
 </form>
 
+
+
+<form action="facebook/doschedulepost" method="POST" id="processform">
+    <input type="hidden" name="schedule_post_original_name" id="schedule_post_original_name" />
+
+       <textarea class="form-control" name="message" id="schedulePostMessage" rows="5" id="comment"  style="margin-left:100px; width:400px; height:75px;" onkeyup="handleText('schedulePostMessage','schedulePostButton')"></textarea>
+     
+   
+              <input id="schedulePostButton" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
+
+</form>
 </div>
+
+
 <div id="shareIdea" class="overlay_form">
  <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" 
- class="direct-upload">
+ class="shareidea-upload">
     <!-- We'll specify these variables with PHP -->
     <!-- Note: Order of these is Important -->
     <input type="hidden" name="key" value="${filename}">
@@ -43,14 +66,14 @@ use Facebook\FacebookSession;
 </form>
 
 
-<form action="twitter/doproposetweet" method="POST" id="processform">
+<form action="facebook/doshareidea" method="POST" id="processform">
     <input type="hidden" name="upload_original_name" id="upload_original_name" />
-      <input type="hidden" name="platform" value="twitter" />
-       <textarea class="form-control" name="message" id="message" rows="5" id="comment"  style="margin-left:100px; 
-       width:400px; height:75px;" onkeyup="handleText()"></textarea>
+      <input type="hidden" name="platform" value="facebook" />
+       <textarea class="form-control" name="message" id="shareIdeaMessage" rows="5" id="comment"  style="margin-left:100px; 
+       width:400px; height:75px;" onkeyup="handleText('shareIdeaMessage','shareIdeaButton')"></textarea>
      
    
-              <input id="btnSubmitForm" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
+              <input id="shareIdeaButton" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
 
 </form>
 </div>
@@ -66,7 +89,10 @@ use Facebook\FacebookSession;
   <div class="col-md-12">
 
 
-@if(isset($graphObject))
+
+
+
+@if(isset($feed))
 @if(isset($_SESSION['fb_currentUser']))
 <img style="float:left" src="http://graph.facebook.com/{{ $_SESSION['fb_currentUser']['id'] }}/picture">
 <div style="margin-left:60px;">  Connected to facebook as {{ $_SESSION['fb_currentUser']['name'] }}</div>
@@ -80,14 +106,15 @@ use Facebook\FacebookSession;
  <div class="header">
 <h3>Scheduled Posts</h3>
  </div>
- <table>
+ 
+
+@if(isset($scheduledPosts['data']))
+<table>
  <tr>
  <td></td>
  <td><b>Message</b></td>
 
  </tr>
-
-@if(isset($scheduledPosts['data']))
 @foreach($scheduledPosts['data'] as $object)
 @if(isset($object->message))
         <tr>
@@ -108,11 +135,12 @@ use Facebook\FacebookSession;
 
 
  @endforeach
+ </table>
 @endif
  @if(count($scheduledPosts) == 0)
     <div class="text-muted text-center" style="padding:30px;"> There are no posts scheduled</div>
  @endif
- </table>
+ 
 
  </div>
 
@@ -126,17 +154,17 @@ use Facebook\FacebookSession;
 
  <div>
 
- <table>
+ 
+
+ @if(isset($feed['data']))
+<table>
  <tr>
  <td></td>
  <td><b>Message</b></td>
  <td></td>
  <td><b>Likes</b></td>
  </tr>
-
- @if(isset($graphObject['data']))
-
-  @foreach($graphObject['data'] as $object)
+  @foreach($feed['data'] as $object)
 
       @if(isset($object->message))
         <tr>
@@ -183,9 +211,13 @@ use Facebook\FacebookSession;
 
   @endforeach
 
-  
-  @endif
-</table>
+  </table>
+
+  @else
+ 
+    <div class="text-muted text-center" style="padding:30px;"> There have been no recent posts</div>
+ @endif
+
 </div>
 @else
 
@@ -203,7 +235,7 @@ use Facebook\FacebookSession;
 
       <button class="btn btn-primary pull-right" id="goShareIdea" type="button" href="#shareIdea">Share an Idea</button>
         <div class="header">
-          <h3>Facebook Post Ideas</h3>
+          <h3>Post Ideas</h3>
 
         </div>
 
@@ -252,6 +284,6 @@ use Facebook\FacebookSession;
 @stop
 
 @section('js')
- <script src="js/pages/twitter.js"></script>
+ <script src="js/pages/facebook.js"></script>
 @stop
 

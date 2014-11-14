@@ -3,6 +3,8 @@
 use NS\ProposedPosts\ProposedPostCreator;
 use NS\ProposedPosts\ProposedPost;
 use NS\ProposedPosts\ProposedPostCreatorListener;
+use NS\Core\S3;
+use NS\Core\Facebook;
 use NS\ProposedPosts\ProposedPostRepository;
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
@@ -19,86 +21,44 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 	protected $posts;
 	protected $postCreator;
 	protected $pageID;
+	protected $s3;
+	protected $facebook;
 
-	public function __construct(ProposedPostRepository $posts, ProposedPostCreator $postCreator){
+	public function __construct(ProposedPostRepository $posts, ProposedPostCreator $postCreator, S3 $s3,Facebook $facebook){
 		$this->posts = $posts;
 		$this->postCreator = $postCreator;
 		$this->pageID = "382316005227557";
-		//$abtest = "382316005227557";
-		//$ab = "157606107767381";
+		$this->s3 = $s3;
+		$this->facebook = $facebook;
+		session_start(); 
+	
 
 	}
 
 
 	public function index()
 	{
-		session_start(); 
-
-		$session = $this->getFacebookSession();
-
-
-// see if we have a session
-                 if ( isset( $session ) ) {
-
-
-// graph api request for user data
-  				if(!isset($_SESSION['fb_currentUser'])){
-                  $request = new FacebookRequest( $session, 'GET', '/me' );
-                  $response = $request->execute();
-                  $_SESSION['fb_currentUser'] =  $response->getGraphObject()->asArray();
-              }
-
-               // graph api request for page data
-                  $request = new FacebookRequest( $session, 'GET', '/'.$this->pageID.'/promotable_posts?is_published=false'); //need to implement pagination
-                  $response = $request->execute();
-                  $scheduledPosts = $response->getGraphObject()->asArray();
-
-
-  // graph api request for page data
-                  $request = new FacebookRequest( $session, 'GET', '/'.$this->pageID.'/feed'); //need to implement pagination
-                  $response = $request->execute();
-                  $graphObject = $response->getGraphObject()->asArray();
-
-              $request = new FacebookRequest( $session, 'GET', '/me/permissions' );
-              $response = $request->execute();
-                  $permissions = $response->getGraphObject()->asArray();
-        
-            $request = new FacebookRequest( $session, 'GET', '/'.$_SESSION['fb_currentUser']['id'].'/accounts' );
-              $response = $request->execute();
-                  $accounts = $response->getGraphObject()->asArray();
 			
+		$session = $this->facebook->getSession();
 
-$access_token = "1";
-foreach($accounts['data'] as $object){
-	if($object->id == $this->pageID){
-		$access_token = $object->access_token;
-	}
+                 if ( isset( $session ) ) {
+                 $scheduledPosts = $this->facebook->getScheduledPosts($session);
+             	 $feed = $this->facebook->getFeed($session);
+                 $permissions = $this->facebook->getPermissions($session);
+                 $accounts = $this->facebook->getAccounts($session);
 
-  }
-
-
-               
-
-            } else {
-              $graphObject = null;
-            }
+            } 
 
             
-
-
-
 		$proposedPosts = ProposedPost::orderBy('created_at', 'DESC')->where('platform','facebook')->paginate(5);
 
 		$bucket = Config::get('constants.photosBucket');
 $accesskey = Config::get('constants.amazonS3Key');
 $secret = Config::get('constants.amazonS3Secret');
 
-        $s3 = Aws\S3\S3Client::factory(array(
-    'key'    => Config::get('constants.amazonS3Key'),
-    'secret' => Config::get('constants.amazonS3Secret')
-));
-
-           
+  
+ $s3 = $this->s3->client; 
+      
 $now = strtotime(date("Y-m-d\TG:i:s"));
 $expire = date('Y-m-d\TG:i:s\Z', strtotime('+30 minutes', $now));
 $policy = '{
@@ -127,24 +87,26 @@ $policy = '{
 $base64Policy = base64_encode($policy);
 $signature = base64_encode(hash_hmac("sha1", $base64Policy, $secret, $raw_output = true));
 
-  $scope = array('publish_actions','email', 'user_friends',
-                'manage_pages');
-  $helper = new FacebookRedirectLoginHelper( 'http://localhost:8000/facebook' );
-      $loginUrl = $helper->getLoginUrl($scope);
 
- 
+ $loginUrl = $this->facebook->loginUrl;
 
-		$this->view('facebook.facebook',compact('scheduledPosts','permissions','accounts','graphObject','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
+
+
+		$this->view('facebook.facebook',compact('scheduledPosts','permissions','accounts','feed','loginUrl','session','proposedPosts','s3','bucket','accesskey','secret','base64Policy','signature'));
 	
 
 
 	}
 
-public function schedulePost(){
-	session_start(); 
-	$session = $this->getFacebookSession();
 
+
+public function schedulePost(){
+
+
+$session = $this->facebook->getSession();
 $scheduledTime = time() + (7 * 24 * 60 * 60); 
+
+
 
         $request = new FacebookRequest( $session, 'GET', '/'.$_SESSION['fb_currentUser']['id'].'/accounts' );
               $response = $request->execute();
@@ -160,78 +122,51 @@ foreach($accounts['data'] as $object){
   }
 
 
-              $request = new FacebookRequest(
+
+if(Input::Get('schedule_post_original_name') != ""){
+//photo uploaded
+	$url = $this->s3->client->getObjectUrl(Config::get('constants.photosBucket')
+          ,Input::Get('schedule_post_original_name'),'+120 minutes');
+//$url =  "https://s3.amazonaws.com/beehive-photos/" . $url;
+
+$request = new FacebookRequest(
   $session,
   'POST',
   '/'.$this->pageID.'/photos',
   array (
-    'message' => 'phototest2',
+    'message' => Input::Get('message'),
     'access_token' => urlencode($access_token),
-    'scheduled_publish_time' => $scheduledTime,
-    'published' => false,
-    'url' => 'http://graph.facebook.com/squall3d/picture?type=large'
+    'url' => $url
   )
 );
-$response = $request->execute();
-$postresponse = $response->getGraphObject();
+
+
+}
+else{
+	//no photo uploaded
+	
+	$request = new FacebookRequest(
+  $session,
+  'POST',
+  '/'.$this->pageID.'/feed',
+  array (
+    'message' => Input::Get('message'),
+    'access_token' => urlencode($access_token),
+  )
+);
+
+
+}
+
+  $response = $request->execute();
+
+
 
 return Redirect::action('FacebookController@index'); 
 
 }
 
 
-public function getFacebookSession(){
-
-		 FacebookSession::setDefaultApplication('801125503264512', '43011e6e224645a7c5a40c69b729379c');
- 
-
-// login helper with redirect_uri
-
-          $helper = new FacebookRedirectLoginHelper( 'http://localhost:8000/facebook' );
-       
-// see if a existing session exists
-
-          if ( isset( $_SESSION ) && isset( $_SESSION['fb_token'] ) ) {
-  // create new session from saved access_token
-            $session = new FacebookSession( $_SESSION['fb_token'] );
-
-	
-  // validate the access_token to make sure it's still valid
-            try {
-              if ( !$session->validate() ) {
-                $session = null;
-              }
-            } catch ( Exception $e ) {
-    // catch any exceptions
-              $session = null;
-            }
-          }  
-
-          if ( !isset( $session ) || $session === null ) {
-  // no session exists
-
-            try {
-
-              $session = $helper->getSessionFromRedirect();
-            } catch( FacebookRequestException $ex ) {
-    // When Facebook returns an error
-    // handle this better in production code
-              print_r( $ex );
-            } catch( Exception $ex ) {
-    // When validation fails or other local issues
-    // handle this better in production code
-              print_r( $ex );
-            }
-
-          }
-if(isset($session)){
-           // save the session
-                 $_SESSION['fb_token'] = $session->getToken();
-  // create a session using saved token or the new one we generated at login
-                  $session = new FacebookSession( $session->getToken() );
-              }
-return $session;
-}
 
 
 
@@ -265,7 +200,7 @@ return Redirect::action('FacebookController@index');
 }
 
 
-public function doProposePost()
+public function doShareIdea()
 
 	{
 
@@ -282,14 +217,14 @@ public function doProposePost()
 
 	}
 public function disconnectFacebook(){
-		session_start(); 
+	
 	  unset($_SESSION['fb_token']);
       unset($_SESSION['fb_currentUser']);
       return Redirect::action('FacebookController@index'); 
 }
 
 	public function doFacebookLogout(){
-		session_start();
+
 		session_destroy();
 		$this->view('facebook.facebook');
 
@@ -303,7 +238,7 @@ public function disconnectFacebook(){
 
 		
 		if($post->picture != null){
-/*
+
 			$s3 = Aws\S3\S3Client::factory(array(
 				'key'    => Config::get('constants.amazonS3Key'),
 				'secret' => Config::get('constants.amazonS3Secret')
@@ -317,7 +252,12 @@ public function disconnectFacebook(){
     'Key' => $post->id,
     'MetadataDirective' => 'REPLACE',
     ));
-    */
+
+			$s3->deleteObject(array(
+				'Bucket' => Config::get('constants.photosBucket'),
+    'Key' => $post->picture,
+    ));
+    
 
 		}	
 

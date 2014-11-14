@@ -22,10 +22,10 @@ Route::get('user', 'UsersController@index');
 Route::get('facebook', 'FacebookController@index');
 
 Route::get('doFacebookLogout', 'FacebookController@doFacebookLogout');
-Route::post('facebook/doproposepost', 'FacebookController@doProposePost');
+Route::post('facebook/doshareidea', 'FacebookController@doShareIdea');
 Route::get('facebook/disconnect', 'FacebookController@disconnectFacebook');
 Route::post('facebook/likepost', 'FacebookController@likePost');
-Route::post('facebook/schedulepost', 'FacebookController@schedulePost');
+Route::post('facebook/doschedulepost', 'FacebookController@schedulePost');
 
 //Twitter
 Route::get('twitter', 'TwitterController@index');

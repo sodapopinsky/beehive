@@ -1,18 +1,6 @@
 $("#goUpload").leanModal();
 $("#goShareIdea").leanModal();
-function handleText(){
 
-
-if($("#message").val().length > 0){
-  
-  $("#btnSubmitForm").prop("disabled",false);
-}
-else{
-    
-    $("#btnSubmitForm").prop("disabled",true);
-}
-
-}
 $(document).ready( function() {
 
         
