@@ -12,9 +12,9 @@ class DropNameColumnFromUsers extends Migration {
 	 */
 	public function up()
 	{
+
 		Schema::table('users', function($table) {
 			$table->dropColumn('name');
-			
 		});
 	}
 
@@ -26,8 +26,7 @@ class DropNameColumnFromUsers extends Migration {
 	public function down()
 	{
 		Schema::table('users', function($table) {
-			 $table->string('name', 60);
-			
+			$table->string('name',60);
 		});
 	}
 

@@ -5,29 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="shortcut icon" href="images/icon.png">
+  <link rel="shortcut icon" href="{{asset('images/icon.png')}}">
 
   <title>Beehive</title>
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,400italic,700,800' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Raleway:300,200,100' rel='stylesheet' type='text/css'>
 
   <!-- Bootstrap core CSS -->
-  <link href="js/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="js/jquery.gritter/css/jquery.gritter.css" />
-  <link rel="stylesheet" href="fonts/font-awesome-4/css/font-awesome.min.css">
+  <link href="{{asset('js/bootstrap/dist/css/bootstrap.css')}}" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{asset('js/jquery.gritter/css/jquery.gritter.css')}}" />
+  <link rel="stylesheet" href="{{asset('fonts/font-awesome-4/css/font-awesome.min.css')}}">
 
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
     <script src="../../assets/js/html5shiv.js"></script>
     <script src="../../assets/js/respond.min.js"></script>
   <![endif]-->
-  <link rel="stylesheet" type="text/css" href="js/jquery.nanoscroller/nanoscroller.css" />
-    <link rel="stylesheet" type="text/css" href="js/jquery.codemirror/lib/codemirror.css">
-  <link rel="stylesheet" type="text/css" href="js/jquery.codemirror/theme/ambiance.css">
-  <link href="css/custom.css" rel="stylesheet" />  
-  <link rel="stylesheet" type="text/css" href="js/jquery.vectormaps/jquery-jvectormap-1.2.2.css"  media="screen"/>
+  <link rel="stylesheet" type="text/css" href="{{asset('js/jquery.nanoscroller/nanoscroller.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{asset('js/jquery.codemirror/lib/codemirror.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{asset('js/jquery.codemirror/theme/ambiance.css')}}">
+
+    <link rel="stylesheet" type="text/css" href="{{asset('js/bootstrap.datetimepicker/css/bootstrap-datetimepicker.min.css')}}">
+
+  <link href="{{asset('css/custom.css')}}" rel="stylesheet" />  
+  <link rel="stylesheet" type="text/css" href="{{asset('js/jquery.vectormaps/jquery-jvectormap-1.2.2.css')}}"  media="screen"/>
   
-  <link href="css/skin-orange.css" rel="stylesheet" />  
+  <link href="{{asset('css/skin-orange.css')}}" rel="stylesheet" />  
   @yield('css')
 </head>
 
@@ -49,8 +52,9 @@
          
           <ul class="cl-vnavigation">
      
+        <li  ><a href="/user"><i class="fa  fa-user"></i><span>Co Workers</span></a></li>
             <li  ><a href="/facebook"><i class="fa  fa-facebook"></i><span>Facebook</span></a></li>
-          <li  ><a href="/twitter"><i class="fa  fa-twitter"></i><span>Twitter</span></a></li>
+       
 
           </ul>
         </div>
@@ -68,7 +72,7 @@
       <div class="navbar-collapse">
         <ul class="nav navbar-nav navbar-right user-nav">
           <li class="dropdown profile_menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img height="30" width="30" alt="Avatar" src="images/avatars/avatar1.jpg" /><span>{{Auth::user()->firstName . ' ' . Auth::user()->lastName}} </span> <b class="caret"></b></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img height="30" width="30" alt="Avatar" src="{{asset('images/avatars/avatar1.jpg')}}" /><span>{{Auth::user()->firstName . ' ' . Auth::user()->lastName}} </span> <b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="/user">My Profile</a></li>
 
@@ -126,31 +130,32 @@
 
 
 
-  <script src="js/jquery.js"></script>
-  <script src="js/core.js"></script>
-  <script src="js/jquery.cookie/jquery.cookie.js"></script>
-  <script src="js/jquery.pushmenu/js/jPushMenu.js"></script>
+  <script src="{{asset('js/jquery.js')}}"></script>
+  <script src="{{asset('js/core.js')}}"></script>
+  <script src="{{asset('js/jquery.cookie/jquery.cookie.js')}}"></script>
+  <script src="{{asset('js/jquery.pushmenu/js/jPushMenu.js')}}"></script>
   <!--<script type="text/javascript" src="js/jquery.nanoscroller/jquery.nanoscroller.js"></script>-->
-  <script type="text/javascript" src="js/jquery.sparkline/jquery.sparkline.min.js"></script>
-  <script type="text/javascript" src="js/jquery.ui/jquery-ui.js" ></script>
-  <script type="text/javascript" src="js/jquery.gritter/js/jquery.gritter.js"></script>
-  <script type="text/javascript" src="js/behaviour/core.js"></script>
-  <script type="text/javascript" src="js/jquery.upload/js/jquery.fileupload.js"></script>
+  <script type="text/javascript" src="{{asset('js/jquery.sparkline/jquery.sparkline.min.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/jquery.ui/jquery-ui.js')}}" ></script>
+  <script type="text/javascript" src="{{asset('js/jquery.gritter/js/jquery.gritter.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/behaviour/core.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/jquery.upload/js/jquery.fileupload.js')}}"></script>
  <!--<script type="text/javascript" src="js/jquery.upload/js/jquery.fileupload-validate.js"></script>-->
-  <script src="js/jquery.leanModal.min.js"></script>
+  <script src="{{asset('js/jquery.leanModal.min.js')}}"></script>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-  <script src="js/bootstrap/dist/js/bootstrap.min.js"></script>
-      <script src="js/jquery.codemirror/lib/codemirror.js"></script>
-  <script src="js/jquery.codemirror/mode/xml/xml.js"></script>
-  <script src="js/jquery.codemirror/mode/css/css.js"></script>
-  <script src="js/jquery.codemirror/mode/htmlmixed/htmlmixed.js"></script>
-  <script src="js/jquery.codemirror/addon/edit/matchbrackets.js"></script>
-  <script src="js/jquery.vectormaps/jquery-jvectormap-1.2.2.min.js"></script>
-  <script src="js/jquery.vectormaps/maps/jquery-jvectormap-world-mill-en.js"></script>
-  <script src="js/behaviour/dashboard.js"></script>
+  <script src="{{asset('js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
+  <script src="{{asset('js/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+      <script src="{{asset('js/jquery.codemirror/lib/codemirror.js')}}"></script>
+  <script src="{{asset('js/jquery.codemirror/mode/xml/xml.js')}}"></script>
+  <script src="{{asset('js/jquery.codemirror/mode/css/css.js')}}"></script>
+  <script src="{{asset('js/jquery.codemirror/mode/htmlmixed/htmlmixed.js')}}"></script>
+  <script src="{{asset('js/jquery.codemirror/addon/edit/matchbrackets.js')}}"></script>
+  <script src="{{asset('js/jquery.vectormaps/jquery-jvectormap-1.2.2.min.js')}}"></script>
+  <script src="{{asset('js/jquery.vectormaps/maps/jquery-jvectormap-world-mill-en.js')}}"></script>
+  <script src="{{asset('js/behaviour/dashboard.js')}}"></script>
   
   <!--
 <script type="text/javascript" src="js/jquery.flot/jquery.flot.js"></script>

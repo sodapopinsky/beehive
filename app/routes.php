@@ -17,6 +17,11 @@ Route::group(['before' => 'auth'], function() {
 	
 Route::get('/', 'UsersController@index');
 Route::get('user', 'UsersController@index');
+Route::get('user/adduser', 'UsersController@getAdduser');
+Route::post('user/adduser', 'UsersController@postAdduser');
+
+Route::get('user/{all}', 'UsersController@getProfile');
+
 
 //Facebook
 Route::get('facebook', 'FacebookController@index');
@@ -38,5 +43,6 @@ Route::get('login', 'AuthController@getLogin');
 Route::post('login', 'AuthController@doLogin');
 
 
-Route::any('{all}', 'FacebookController@index')->where('all', '.*');
+Route::any('{all}', 'UsersController@index')->where('all', '.*');
+
 

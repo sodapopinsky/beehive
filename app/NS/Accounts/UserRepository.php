@@ -11,9 +11,9 @@ class UserRepository extends EloquentRepository
         $this->model = $model;
     }
 
- public function getByEmailPassword($email,$password)
+ public function getByUsernamePassword($username,$password)
     {
-        return $this->model->where('email', '=', $email)->where('password', '=', $password)->first();
+        return $this->model->where('username', '=', $username)->where('password', '=', $password)->first();
     }
    
 }

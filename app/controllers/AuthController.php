@@ -23,7 +23,7 @@ class AuthController extends BaseController
     {
       
         Auth::logout();  
-        $user = $this->users->getByEmailPassword(Input::get('email'),Input::get('password'));
+        $user = $this->users->getByUsernamePassword(Input::get('username'),Input::get('password'));
         if(!$user){ 
             $failures = array('You call that a login attempt?', 'We are having a blast in here.', 'I know you can do it.');
         Session::flash('denied', $failures[array_rand($failures,1)] . ' Try again.');

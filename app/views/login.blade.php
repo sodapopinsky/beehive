@@ -1,3 +1,4 @@
+@section('pageContent')
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,17 +35,19 @@
 	<div class="middle-login">
 		<div class="block-flat">
 			<div class="header">							
-				<h3 class="text-center">beehive</h3>
+				<h3 class="text-center">beehive </h3>
 			</div>
 			<div>
-				<form style="margin-bottom: 0px !important;" class="form-horizontal" method="post" action="loginss">
+				<form style="margin-bottom: 0px !important;" class="form-horizontal" method="post">
 					<div class="content">
-						<h4 class="title"></h4>
+						<h4 class="text-center title text-danger">
+{{Session::get('denied');}}
+						</h4>
 							<div class="form-group">
 								<div class="col-sm-12">
 									<div class="input-group">
 										<span class="input-group-addon"><i class="fa fa-user"></i></span>
-										<input type="text" placeholder="Username" id="username" class="form-control">
+										<input type="text" placeholder="Username" id="username" name="username" class="form-control">
 									</div>
 								</div>
 							</div>
@@ -52,20 +55,20 @@
 								<div class="col-sm-12">
 									<div class="input-group">
 										<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-										<input type="password" placeholder="Password" id="password" class="form-control">
+										<input type="password" placeholder="Password" id="password" name="password" class="form-control">
 									</div>
 								</div>
 							</div>
 							
 					</div>
 					<div class="foot">
-						<button class="btn btn-default" data-dismiss="modal" type="button">Register</button>
+						
 						<button class="btn btn-primary" data-dismiss="modal" type="submit">Log me in</button>
 					</div>
 				</form>
 			</div>
 		</div>
-		<div class="text-center out-links"><a href="#">&copy; 2014 Your Company</a></div>
+		<div class="text-center out-links"><a href="#">&copy; 2014 Nicholas Spitale</a></div>
 	</div> 
 	
 </div>
@@ -88,3 +91,4 @@
 <script type="text/javascript" src="js/jquery.flot/jquery.flot.labels.js"></script>
 </body>
 </html>
+@stop

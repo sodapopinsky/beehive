@@ -8,25 +8,29 @@ use Facebook\FacebookSession;
 
 
 <div id="schedulePost" class="overlay_form">
+
  <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" 
  class="schedulepost-upload">
-    <!-- We'll specify these variables with PHP -->
-    <!-- Note: Order of these is Important -->
+
     <input type="hidden" name="key" value="${filename}">
     <input type="hidden" name="AWSAccessKeyId" value="<?php echo $accesskey; ?>">
     <input type="hidden" name="acl" value="private">
     <input type="hidden" name="success_action_status" value="201">
     <input type="hidden" name="policy" value="<?php echo $base64Policy; ?>">
     <input type="hidden" name="signature" value="<?php echo $signature; ?>">
-<h3 id="forms-control-disabled">Schedule a Facebook Post</h3>
+<h4 id="forms-control-disabled" style="margin-left:5%;">Schedule a Facebook Post</h4>
 
-   <span class="fileinput-button" style="float:left; ">
+   <span class="fileinput-button" style="position:absolute; top:210px; left:5% ">
 
-     <img id="schedulePostImg" class=""  height="75" width="75" src="images/image_placeholder.jpg">
+     <img id="schedulePostImg"   height="60" width="60" src="images/image_placeholder.jpg">
 
      <input type="file" name="file" class="btn" >
 
+
    </span>
+
+
+          
 </form>
 
 
@@ -34,12 +38,23 @@ use Facebook\FacebookSession;
 <form action="facebook/doschedulepost" method="POST" id="processform">
     <input type="hidden" name="schedule_post_original_name" id="schedule_post_original_name" />
 
-       <textarea class="form-control" name="message" id="schedulePostMessage" rows="5" id="comment"  style="margin-left:100px; width:400px; height:75px;" onkeyup="handleText('schedulePostMessage','schedulePostButton')"></textarea>
+  <div class="form-group" class="pull-left" style="width:80%; margin-left:5%;">
+                <div class="input-group date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="m/d/yyyy - HH:ii p" data-link-field="dtp_input1" style="width:200px;">
+                    <input class="form-control" size="16" type="text" value="Select a Date" readonly>
+            
+          <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                </div>
+        <input type="hidden" id="dtp_input1" value="" />
+            </div>
+
+       <textarea class="form-control" name="message" id="schedulePostMessage" rows="5" id="comment"  style="width:90%;margin-left:5%;" onkeyup="handleText('schedulePostMessage','schedulePostButton')"></textarea>
      
    
-              <input id="schedulePostButton" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
+              <input id="schedulePostButton" class="btn btn-primary" disabled  type="submit" style="float:right; margin-top:20px; margin-right:5%;">
+  
 
 </form>
+
 </div>
 
 
@@ -88,6 +103,8 @@ use Facebook\FacebookSession;
   <div class="row">
   <div class="col-md-12">
 
+   
+ 
 
 
 
@@ -285,5 +302,44 @@ use Facebook\FacebookSession;
 
 @section('js')
  <script src="js/pages/facebook.js"></script>
+ <script type="text/javascript">
+
+
+
+    $('.form_datetime').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    forceParse: 0,
+        showMeridian: 1
+    });
+  $('.form_date').datetimepicker({
+        language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    minView: 2,
+    forceParse: 0
+    });
+  $('.form_time').datetimepicker({
+        language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 1,
+    minView: 0,
+    maxView: 1,
+    forceParse: 0
+    });
+</script>
+
+
+
 @stop
 

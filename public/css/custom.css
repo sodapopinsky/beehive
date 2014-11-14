@@ -11,8 +11,11 @@
 }
 
 .overlay_form {
-  width: 600px;
-  padding: 20px;
+  width: 90%;
+  max-width:600px;
+  margin-left:5%;
+  padding-top:20px;
+  padding-bottom:20px;
   display: none;
   background: #FFF;
   border-radius: 5px;
