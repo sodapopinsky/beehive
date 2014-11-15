@@ -70,11 +70,11 @@ use Facebook\FacebookSession;
     <input type="hidden" name="success_action_status" value="201">
     <input type="hidden" name="policy" value="<?php echo $base64Policy; ?>">
     <input type="hidden" name="signature" value="<?php echo $signature; ?>">
-<h3 id="forms-control-disabled">Share a Facebook Post Idea</h3>
+<h4 id="forms-control-disabled" style="margin-left:5%;">Share a Facebook Post Idea</h4>
 
-   <span class="fileinput-button" style="float:left; ">
+  <span class="fileinput-button" style="position:absolute; top:165px; left:5% ">
 
-     <img id="imgPreview" class=""  height="75" width="75" src="images/image_placeholder.jpg">
+     <img id="imgPreview"   height="60" width="60" src="images/image_placeholder.jpg">
 
      <input type="file" name="file" class="btn" >
 
@@ -85,11 +85,10 @@ use Facebook\FacebookSession;
 <form action="facebook/doshareidea" method="POST" id="processform">
     <input type="hidden" name="upload_original_name" id="upload_original_name" />
       <input type="hidden" name="platform" value="facebook" />
-       <textarea class="form-control" name="message" id="shareIdeaMessage" rows="5" id="comment"  style="margin-left:100px; 
-       width:400px; height:75px;" onkeyup="handleText('shareIdeaMessage','shareIdeaButton')"></textarea>
+       <textarea class="form-control" name="message" id="shareIdeaMessage" rows="5" id="comment"   style="width:90%;margin-left:5%;" onkeyup="handleText('shareIdeaMessage','shareIdeaButton')"></textarea>
      
    
-              <input id="shareIdeaButton" class="btn btn-primary" disabled  type="submit" style="margin-top:15px;">
+              <input id="shareIdeaButton" class="btn btn-primary" disabled  type="submit" style="float:right; margin-top:20px; margin-right:5%;">
 
 </form>
 </div>
