@@ -19,7 +19,7 @@
         <div class="mail-nav collapse" >
 
         @foreach($data['conversations'] as $conversation)
-          <div style="background:#F2F2F2; margin-bottom:1px; padding:10px 5px;"> 
+          <div style="background:#F2F2F2; cursor:pointer; margin-bottom:1px; padding:10px 5px;" onclick="goAjax({{$conversation->fromUser()->first()->id}},'{{$conversation->fromUser()->first()->firstName . ' ' . $conversation->fromUser()->first()->lastName }}');"> 
 
         <span class="pull-right date">17 Feb</span> 
         <img class="avatar pull-left" alt="user-avatar" src="images/avatar_50.jpg"/> 
@@ -42,66 +42,13 @@
 
 
  <div class="content">
-
-    <div class="mail-inbox">
-    <div style="height:60px; padding:10px;">
+<div style="height:60px; padding:10px;">
         
-                  <h4><b>Jeff Hanneman</b></h4>
+                  <h4 id="username"><b></b></h4>
                    </span>
       </div>
 
- 
-      <div class="mails">
-        <div class="item">
-          <div><input type="checkbox" name="c[]" /> </div>
-          <div>
-            <span class="date pull-right"><i class="fa fa-paperclip"></i> 20 Nov</span>
-            <h4 class="from">Jeff Hanneman</h4>
-            <p class="msg">Urgent - You forgot your keys in the class room, please come imediatly!</p>
-          </div>
-        </div>
-        <div class="item">
-          <div><input type="checkbox" name="c[]" /> </div>
-          <div>
-            <span class="date pull-right"><i class="fa fa-paperclip"></i> 20 Nov</span>
-            <h4 class="from">John Doe</h4>
-            <p class="msg">Urgent - You forgot your keys in the class room, please come imediatly!</p>
-          </div>
-        </div>
-        <div class="item">
-          <div><input type="checkbox" name="c[]" /> </div>
-          <div>
-            <span class="date pull-right"><i class="fa fa-paperclip"></i> 20 Nov</span>
-            <h4 class="from">John Doe</h4>
-            <p class="msg">Urgent - You forgot your keys in the class room, please come imediatly!</p>
-          </div>
-        </div>
-        <div class="item">
-          <div><input type="checkbox" name="c[]" /> </div>
-          <div>
-            <span class="date pull-right"><i class="fa fa-paperclip"></i> 20 Nov</span>
-            <h4 class="from">John Doe</h4>
-            <p class="msg">Urgent - You forgot your keys in the class room, please come imediatly!</p>
-          </div>
-        </div>
-        <div class="item">
-          <div><input type="checkbox" name="c[]" /> </div>
-          <div>
-            <span class="date pull-right"><i class="fa fa-paperclip"></i> 20 Nov</span>
-            <h4 class="from">John Doe</h4>
-            <p class="msg">Urgent - You forgot your keys in the class room, please come imediatly!</p>
-          </div>
-        </div>
-        <div class="item">
-          <div><input type="checkbox" name="c[]" /> </div>
-          <div>
-            <span class="date pull-right"><i class="fa fa-paperclip"></i> 20 Nov</span>
-            <h4 class="from">John Doe</h4>
-            <p class="msg">Urgent - You forgot your keys in the class room, please come imediatly!</p>
-          </div>
-        </div>
-
-      </div>
+    <div class="mail-inbox" id="ajaxContent">   
     </div>
   </div> 
 
@@ -110,4 +57,18 @@
   </div> 
   
 </div>
+
+@stop
+
+@section('js')
+ <script type="text/javascript">
+ function goAjax(id,name){
+   $("#username").html(name);
+   $.ajax({url:"messages/conversation/"+id,success:function(result){
+    $("#ajaxContent").html(result);
+  }});
+
+ }
+
+</script>
 @stop

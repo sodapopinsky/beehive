@@ -25,6 +25,7 @@ Route::get('user/{all}', 'UsersController@getProfile');
 //Messaging
 Route::post('postmessage', 'MessagesController@postMessage');
 Route::get('messages', 'MessagesController@index');
+Route::get('messages/conversation/{user}', 'MessagesController@getConversation');
 //Facebook
 Route::get('facebook', 'FacebookController@index');
 

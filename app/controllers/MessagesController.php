@@ -37,6 +37,15 @@ return App::make('NS\Messages\MessageCreator')->create($this, [
 
    }
 
+   public function getConversation($user){
+
+    $conversation = $this->messages->getSingleConversationByIds(Auth::user()->id,$user);
+    return View::make('messages.conversation',array('messages' => $conversation));
+
+    
+
+   }
+
    public function messageValidationError($errors){
         return $this->redirectBack(['errors' => $errors]);
     }
