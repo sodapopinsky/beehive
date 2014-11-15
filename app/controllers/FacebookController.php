@@ -212,7 +212,7 @@ $session = $this->facebook->getSession();
 
 	{
 
-		$this->postCreator->create($this, [
+return App::make('NS\ProposedPosts\ProposedPostCreator')->create($this, [
 			'message' => Input::get('message'),
 			'platform' => Input::get('platform'),
 			'organization' => 1,
@@ -221,7 +221,7 @@ $session = $this->facebook->getSession();
 			]);
 
 
-		return Redirect::action('FacebookController@index'); 
+		
 
 	}
 	public function disconnectFacebook(){
@@ -239,12 +239,12 @@ $session = $this->facebook->getSession();
 	}
 
 	public function proposedPostValidationError($errors){
-
+  return $this->redirectBack(['errors' => $errors]);
 	}
 
 	public function proposedPostCreated($post){
 
-		
+		/*
 		if($post->picture != null){
 
 			$s3 = Aws\S3\S3Client::factory(array(
@@ -267,7 +267,8 @@ $session = $this->facebook->getSession();
 				));
 
 
-		}	
+		}	*/
+		return Redirect::action('FacebookController@index'); 
 
 	}
 

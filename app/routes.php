@@ -22,7 +22,9 @@ Route::post('user/adduser', 'UsersController@postAdduser');
 
 Route::get('user/{all}', 'UsersController@getProfile');
 
-
+//Messaging
+Route::post('postmessage', 'MessagesController@postMessage');
+Route::get('messages', 'MessagesController@index');
 //Facebook
 Route::get('facebook', 'FacebookController@index');
 
