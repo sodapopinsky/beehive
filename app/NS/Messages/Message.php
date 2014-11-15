@@ -12,11 +12,14 @@ class Message extends Entity
     protected $table    = 'messages';
     protected $fillable = ['message','from', 'to'];
    // protected $dates    = ['deleted_at'];
-/*
-       public function user()
+
+       public function fromUser()
     {
-        return $this->belongsTo('NS\Accounts\User','user');
+        return $this->belongsTo('NS\Accounts\User','from');
     }
-    */
+      public function toUser()
+    {
+        return $this->belongsTo('NS\Accounts\User','to');
+    }
 
 }

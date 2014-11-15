@@ -86,7 +86,32 @@
             <ul class="dropdown-menu messages">
               <li>
                 <div class="nano nscroller">
-                  <div class="content">
+                 <div class="content">
+@if(1 == 2)
+                 
+                    <ul>
+                      <li>
+                        <a href="#">
+                          <img src="images/avatar2.jpg" alt="avatar" /><span class="date pull-right">13 Sept.</span> <span class="name">Daniel</span> Hey! How are you?
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <img src="images/avatar_50.jpg" alt="avatar" /><span class="date pull-right">20 Oct.</span><span class="name">Adam</span> Hi! Can you fix my phone?
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <img src="images/avatar4_50.jpg" alt="avatar" /><span class="date pull-right">2 Nov.</span><span class="name">Michael</span> Regards!
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <img src="images/avatar3_50.jpg" alt="avatar" /><span class="date pull-right">2 Nov.</span><span class="name">Lucy</span> Hello, my name is Lucy
+                        </a>
+                      </li>
+                    </ul>
+@else
                     <ul>
                       <li>
                        
@@ -95,9 +120,10 @@
                       </li>
                 
                     </ul>
+                    @endif
                   </div>
                 </div>
-               <!--  <ul class="foot"><li><a href="#">View all messages </a></li></ul>   -->        
+                 <ul class="foot"><li><a href="/messages">View all messages </a></li></ul>         
               </li>
             </ul>
           </li>

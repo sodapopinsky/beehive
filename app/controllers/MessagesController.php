@@ -20,8 +20,10 @@ class MessagesController extends BaseController implements MessageCreatorListene
 
     public function index()
     {
-        $messages = $this->messages->getByUserID(Auth::user()->id);
-       $this->view('messages.messages',compact('messages'));
+      $conversations = $this->messages->getConversationsById(Auth::user()->id);
+      $this->view('messages.messages',compact('conversations'));
+
+
        
    }
    

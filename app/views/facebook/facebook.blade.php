@@ -9,15 +9,15 @@ use Facebook\FacebookSession;
 
 <div id="schedulePost" class="overlay_form">
 
- <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" 
+ <form action="//<?php echo $data['bucket']; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" 
  class="schedulepost-upload">
 
     <input type="hidden" name="key" value="${filename}">
-    <input type="hidden" name="AWSAccessKeyId" value="<?php echo $accesskey; ?>">
+    <input type="hidden" name="AWSAccessKeyId" value="<?php echo $data['accesskey']; ?>">
     <input type="hidden" name="acl" value="private">
     <input type="hidden" name="success_action_status" value="201">
-    <input type="hidden" name="policy" value="<?php echo $base64Policy; ?>">
-    <input type="hidden" name="signature" value="<?php echo $signature; ?>">
+    <input type="hidden" name="policy" value="<?php echo $data['base64Policy']; ?>">
+    <input type="hidden" name="signature" value="<?php echo $data['signature']; ?>">
 <h4 id="forms-control-disabled" style="margin-left:5%;">Schedule a Facebook Post</h4>
 
    <span class="fileinput-button" style="position:absolute; top:210px; left:5% ">
@@ -60,16 +60,16 @@ use Facebook\FacebookSession;
 
 
 <div id="shareIdea" class="overlay_form">
- <form action="//<?php echo $bucket; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" 
+ <form action="//<?php echo $data['bucket']; ?>.s3.amazonaws.com" method="POST" enctype="multipart/form-data" 
  class="shareidea-upload">
     <!-- We'll specify these variables with PHP -->
     <!-- Note: Order of these is Important -->
     <input type="hidden" name="key" value="${filename}">
-    <input type="hidden" name="AWSAccessKeyId" value="<?php echo $accesskey; ?>">
+    <input type="hidden" name="AWSAccessKeyId" value="<?php echo $data['accesskey']; ?>">
     <input type="hidden" name="acl" value="private">
     <input type="hidden" name="success_action_status" value="201">
-    <input type="hidden" name="policy" value="<?php echo $base64Policy; ?>">
-    <input type="hidden" name="signature" value="<?php echo $signature; ?>">
+    <input type="hidden" name="policy" value="<?php echo $data['base64Policy']; ?>">
+    <input type="hidden" name="signature" value="<?php echo $data['signature']; ?>">
 <h4 id="forms-control-disabled" style="margin-left:5%;">Share a Facebook Post Idea</h4>
 
   <span class="fileinput-button" style="position:absolute; top:165px; left:5% ">
@@ -115,7 +115,7 @@ use Facebook\FacebookSession;
 
 
 
-@if(isset($feed))
+@if(isset($data['feed']))
 @if(isset($_SESSION['fb_currentUser']))
 <img style="float:left" src="http://graph.facebook.com/{{ $_SESSION['fb_currentUser']['id'] }}/picture">
 <div style="margin-left:60px;">  Connected to facebook as {{ $_SESSION['fb_currentUser']['name'] }}</div>
@@ -131,14 +131,14 @@ use Facebook\FacebookSession;
  </div>
  
 
-@if(isset($scheduledPosts['data']))
+@if(isset($data['scheduledPosts']['data']))
 <table>
  <tr>
  <td></td>
  <td><b>Message</b></td>
 
  </tr>
-@foreach($scheduledPosts['data'] as $object)
+@foreach($data['scheduledPosts']['data'] as $object)
 @if(isset($object->message))
         <tr>
               <td>
@@ -160,7 +160,7 @@ use Facebook\FacebookSession;
  @endforeach
  </table>
 @endif
- @if(count($scheduledPosts) == 0)
+ @if(count($data['scheduledPosts']) == 0)
     <div class="text-muted text-center" style="padding:30px;"> There are no posts scheduled</div>
  @endif
  
@@ -244,7 +244,7 @@ use Facebook\FacebookSession;
 </div>
 @else
 
-<a class="btn btn-facebook" href="{{ $loginUrl }} "><i class="fa fa-facebook"></i> | Connect with Facebook</a>
+<a class="btn btn-facebook" href="{{ $data['loginUrl'] }} "><i class="fa fa-facebook"></i> | Connect with Facebook</a>
 
 @endif
 
@@ -264,11 +264,11 @@ use Facebook\FacebookSession;
 
         <div class="content">
         <table class="table table-striped table-bordered bootstrap-datatable datatable">
-          @if(count($proposedPosts) == 0)
+          @if(count($data['proposedPosts']) == 0)
           <div class="text-muted text-center" style="padding:30px;"> You have not shared any post ideas</div>
           @endif
 
-         @foreach($proposedPosts as $post)
+         @foreach($data['proposedPosts'] as $post)
          <tr>
          <td>
           <?php 
@@ -291,7 +291,7 @@ use Facebook\FacebookSession;
          @endforeach
 
         </table>    
-        <?php echo $proposedPosts->links(); ?> 
+        <?php echo $data['proposedPosts']->links(); ?> 
       </div>
 
       </div>
