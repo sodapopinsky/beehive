@@ -32,6 +32,11 @@
   
   <link href="{{asset('css/skin-orange.css')}}" rel="stylesheet" />  
   @yield('css')
+
+  <script>
+ 
+  
+  </script>
 </head>
 
 <body>
