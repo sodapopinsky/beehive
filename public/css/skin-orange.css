@@ -1665,7 +1665,7 @@ body.texture {
   padding: 17px 20px;
   display: table;
   width: 100%;
-  cursor: pointer;
+
 }
 .mail-inbox .mails .item:nth-child(even),
 .main-app .items .item:nth-child(even) {
