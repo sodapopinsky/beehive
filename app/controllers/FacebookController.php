@@ -239,7 +239,7 @@ return App::make('NS\ProposedPosts\ProposedPostCreator')->create($this, [
 	}
 
 	public function proposedPostValidationError($errors){
-  //return $this->redirectBack(['errors' => $errors]);
+  return $this->redirectBack(['errors' => $errors]);
 	}
 
 	public function proposedPostCreated($post){
@@ -268,8 +268,8 @@ return App::make('NS\ProposedPosts\ProposedPostCreator')->create($this, [
 
 
 		}	
-		var_dump($result);
-	//	return Redirect::action('FacebookController@index'); 
+		
+		return Redirect::action('FacebookController@index'); 
 
 	}
 
