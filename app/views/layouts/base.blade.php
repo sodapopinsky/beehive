@@ -79,7 +79,7 @@
           <li class="dropdown profile_menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img height="30" width="30" alt="Avatar" src="{{asset('images/avatars/avatar1.jpg')}}" /><span>{{Auth::user()->firstName . ' ' . Auth::user()->lastName}} </span> <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="/user">My Profile</a></li>
+              <li><a href="/user/{{Auth::user()->id}}">My Profile</a></li>
 
               <li>{{link_to('logout','Sign Out')}}</li>
             </ul>
