@@ -239,12 +239,12 @@ return App::make('NS\ProposedPosts\ProposedPostCreator')->create($this, [
 	}
 
 	public function proposedPostValidationError($errors){
-  return $this->redirectBack(['errors' => $errors]);
+  //return $this->redirectBack(['errors' => $errors]);
 	}
 
 	public function proposedPostCreated($post){
 
-		/*
+		
 		if($post->picture != null){
 
 			$s3 = Aws\S3\S3Client::factory(array(
@@ -267,8 +267,9 @@ return App::make('NS\ProposedPosts\ProposedPostCreator')->create($this, [
 				));
 
 
-		}	*/
-		return Redirect::action('FacebookController@index'); 
+		}	
+		var_dump($result);
+	//	return Redirect::action('FacebookController@index'); 
 
 	}
 
