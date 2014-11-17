@@ -1,6 +1,6 @@
 <?php 
 namespace NS\Core;
-
+use App;
 use Config;
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
@@ -10,9 +10,16 @@ class Facebook
     protected $client;
     protected $pageID;
     public $loginUrl;
+    public $redirectUrl;
     public function __construct()
     {
         $this->pageID = "382316005227557";
+        if(App::isLocal()){
+        $this->redirectUrl = 'http://localhost:8000/facebook';
+      }
+      else{
+         $this->redirectUrl = 'atomicbeehive.herokuapp.com/facebook';
+      }
         	//$abtest = "382316005227557";
 		//$ab = "157606107767381";
 
@@ -23,7 +30,7 @@ public function getSession(){
      FacebookSession::setDefaultApplication('801125503264512', '43011e6e224645a7c5a40c69b729379c');
  
 
-     $helper = new FacebookRedirectLoginHelper( 'http://localhost:8000/facebook' );
+     $helper = new FacebookRedirectLoginHelper( $this->redirectUrl );
        
 // see if a existing session exists
 
@@ -78,7 +85,7 @@ if(isset($session)){
 
                $scope = array('publish_actions','email', 'user_friends',
                 'manage_pages');
-  $helper = new FacebookRedirectLoginHelper( 'http://localhost:8000/facebook' );
+  $helper = new FacebookRedirectLoginHelper(  $this->redirectUrl  );
       $this->loginUrl = $helper->getLoginUrl($scope);
 
 
