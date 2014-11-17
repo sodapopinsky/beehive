@@ -12,8 +12,8 @@ protected $title = '';
 protected $messages;
    public function __construct(){
         $messages = new MessageRepository(new Message());
-        $this->$messages = $messages->getByUserID(Auth::user()->id);
-        
+        $this->$messages = $messages->getLastFour(Auth::user()->id);
+      
     }
 
 
@@ -21,14 +21,17 @@ protected $messages;
 	{
 		if ( ! is_null($this->layout))
 		{
+            $messages = new MessageRepository(new Message());
+            View::share(['messages'=>$messages->getLastFour(Auth::user()->id)]);
 			$this->layout = View::make($this->layout);
+
 		}
 	}
 
 	protected function view($path, $data = [])
     {
       
-        $this->layout->content = View::make($path, array('data'=>$data,'messages'=>$this->messages));
+        $this->layout->content = View::make($path, $data);
     }
 
     protected function dump($data){

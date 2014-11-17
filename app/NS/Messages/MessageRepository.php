@@ -11,8 +11,14 @@ class MessageRepository extends EloquentRepository
         $this->model = $model;
     }
 
+/*
 public function getByUserID($id){
  	return $this->model->where('to', '=', $id)->get();
+}
+*/
+
+public function getLastFour($id){
+  return $this->model->where('to', '=', $id)->take(4)->get();
 }
 
 

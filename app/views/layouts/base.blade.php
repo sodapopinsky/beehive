@@ -90,45 +90,49 @@
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class=" fa fa-inbox"></i></a>
             <ul class="dropdown-menu messages">
               <li>
-                <div class="nano nscroller">
-                 <div class="content">
-@if(1 == 2)
-                 
-                    <ul>
-                      <li>
-                        <a href="#">
-                          <img src="images/avatar2.jpg" alt="avatar" /><span class="date pull-right">13 Sept.</span> <span class="name">Daniel</span> Hey! How are you?
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <img src="images/avatar_50.jpg" alt="avatar" /><span class="date pull-right">20 Oct.</span><span class="name">Adam</span> Hi! Can you fix my phone?
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <img src="images/avatar4_50.jpg" alt="avatar" /><span class="date pull-right">2 Nov.</span><span class="name">Michael</span> Regards!
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <img src="images/avatar3_50.jpg" alt="avatar" /><span class="date pull-right">2 Nov.</span><span class="name">Lucy</span> Hello, my name is Lucy
-                        </a>
-                      </li>
-                    </ul>
-@else
-                    <ul>
-                      <li>
-                       
-                         <div class="small text-center text-muted" style="padding-top:80px;">You have no messages</div>
-                        
-                      </li>
+                      
                 
+                
+               
+  @if(count($messages) > 0)
+  <div class="nano nscroller">
+         <div class="content">
+
+                   <ul>
+                 @foreach($messages as $message)
+                      <li>
+
+                        <a href="#" style="padding-left:10px; padding-right:10px; ">
+                          <span class="date pull-right">{{$message->created_at}}</span> <span class="name">name</span> {{$message->message}}
+                        </a>
+                      </li>
+                 @endforeach
                     </ul>
-                    @endif
-                  </div>
-                </div>
-                 <ul class="foot"><li><a href="/messages">View all messages </a></li></ul>         
+
+             </div>   
+</div>
+<ul class="foot"><li><a href="/messages">View all messages </a></li></ul>
+ @else 
+   <div class="nano nscroller">
+   <div class="content">
+  <ul>
+                     <!-- <li><a href="#"><i class="fa fa-cloud-upload info"></i><b>Daniel</b> is now following you <span class="date">2 minutes ago.</span></a></li> -->
+                         <div class="small text-center text-muted" style="padding-top:80px;">You have no messages</div>
+                      
+                    </ul>
+                    </div>
+                    </div>
+  @endif
+                
+                 
+                 
+       
+            
+                     
+
+                 
+                  
+                    
               </li>
             </ul>
           </li>
@@ -138,6 +142,8 @@
               <li>
                 <div class="nano nscroller">
                   <div class="content">
+
+                  
                     <ul>
                      <!-- <li><a href="#"><i class="fa fa-cloud-upload info"></i><b>Daniel</b> is now following you <span class="date">2 minutes ago.</span></a></li> -->
                          <div class="small text-center text-muted" style="padding-top:80px;">You have no notifications</div>
@@ -158,7 +164,6 @@
   
 
 @yield('pageContent')
-
 
 
   <script src="{{asset('js/jquery.js')}}"></script>

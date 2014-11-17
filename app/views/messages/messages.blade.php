@@ -17,7 +17,7 @@
         </div>        
         <div class="mail-nav collapse" >
         <?php $initId = 0; ?>
-        @foreach($data['conversations'] as $key => $conversation)
+        @foreach($conversations as $key => $conversation)
         <?php
         if($initId == 0){
         if($key == $conversation->from){

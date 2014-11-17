@@ -20,7 +20,7 @@
                   </tr>
                 </thead>
                 <tbody class="no-border-x no-border-y">
-                  @foreach($data['users'] as $user)
+                  @foreach($users as $user)
               <tr>
 <td><a href="/user/{{$user->id}}">{{$user->firstName . " " . $user->lastName}}</a></td>
 </tr>
