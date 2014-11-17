@@ -13,6 +13,7 @@ alert("here1");
             datatype: 'xml',
             add: function (event, data) {
 alert("hereadd");
+
        var goUpload = true;
         var uploadFile = data.files[0];
         if (!(/\.(gif|jpg|jpeg|tiff|png)$/i).test(uploadFile.name)) {
