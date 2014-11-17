@@ -179,7 +179,7 @@ use Facebook\FacebookSession;
 
  
 
- @if(isset($feed['data']))
+ @if(isset($data['feed']['data']))
 <table>
  <tr>
  <td></td>
@@ -187,7 +187,7 @@ use Facebook\FacebookSession;
  <td></td>
  <td><b>Likes</b></td>
  </tr>
-  @foreach($feed['data'] as $object)
+  @foreach($data['feed']['data'] as $object)
 
       @if(isset($object->message))
         <tr>

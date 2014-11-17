@@ -27,9 +27,12 @@ class FacebookController extends BaseController implements ProposedPostCreatorLi
 	public function __construct(ProposedPostRepository $posts, ProposedPostCreator $postCreator, S3 $s3,Facebook $facebook){
 		$this->posts = $posts;
 		$this->postCreator = $postCreator;
-		$this->pageID = "382316005227557";
+		$this->pageID = "157606107767381";
+		//ab - 157606107767381
+		//abtest - 382316005227557
 		$this->s3 = $s3;
 		$this->facebook = $facebook;
+		$this->facebook->pageID = $this->pageID;
 		session_start(); 
 	}
 

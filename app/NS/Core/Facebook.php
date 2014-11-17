@@ -8,12 +8,12 @@ use Facebook\FacebookRequest;
 class Facebook
 {
     protected $client;
-    protected $pageID;
+    public $pageID;
     public $loginUrl;
     public $redirectUrl;
     public function __construct()
     {
-        $this->pageID = "382316005227557";
+       // $this->pageID = "382316005227557";
         if(App::isLocal()){
         $this->redirectUrl = 'http://localhost:8000/facebook';
       }
