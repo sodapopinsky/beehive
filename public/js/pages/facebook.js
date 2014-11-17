@@ -4,7 +4,8 @@ $("#goShareIdea").leanModal();
 
 
 $(document).ready( function() {
-alert("here1");
+  
+
      var shareform =  $('.shareidea-upload');
 
         shareform.fileupload({
@@ -12,9 +13,13 @@ alert("here1");
             type: 'POST',
             datatype: 'xml',
             add: function (event, data) {
-alert("hereadd");
+
 
        var goUpload = true;
+         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+goUpload = false;
+alert("mobile uploads not available at this time");
+}
         var uploadFile = data.files[0];
         if (!(/\.(gif|jpg|jpeg|tiff|png)$/i).test(uploadFile.name)) {
             alert('Please select an image file');
@@ -58,7 +63,7 @@ alert("hereadd");
                 window.onbeforeunload = null;
             },
             success: function(data) {
-                alert("here3");
+              
                 // onSuccess
             },
             done: function (event, data) {
@@ -83,6 +88,11 @@ var form =  $('.schedulepost-upload');
             add: function (event, data) {
 
        var goUpload = true;
+
+           if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+goUpload = false;
+alert("mobile uploads not available at this time");
+}
         var uploadFile = data.files[0];
         if (!(/\.(gif|jpg|jpeg|tiff|png)$/i).test(uploadFile.name)) {
             alert('Please select an image file');
