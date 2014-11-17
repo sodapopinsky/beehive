@@ -16,10 +16,10 @@
           <h4 class="page-title">Conversations</h4>
         </div>        
         <div class="mail-nav collapse" >
-
+        <?php $initId = 0; ?>
         @foreach($data['conversations'] as $key => $conversation)
         <?php
-        if(!isset($initId)){
+        if($initId != 0)){
         if($key == $conversation->from){
            $initName = $conversation->fromUser()->first()->firstName . ' ' . $conversation->fromUser()->first()->lastName;
         }
