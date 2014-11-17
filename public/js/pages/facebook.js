@@ -4,7 +4,7 @@ $("#goShareIdea").leanModal();
 
 
 $(document).ready( function() {
-
+alert("here1");
      var shareform =  $('.shareidea-upload');
 
         shareform.fileupload({
@@ -12,7 +12,7 @@ $(document).ready( function() {
             type: 'POST',
             datatype: 'xml',
             add: function (event, data) {
-
+alert("hereadd");
        var goUpload = true;
         var uploadFile = data.files[0];
         if (!(/\.(gif|jpg|jpeg|tiff|png)$/i).test(uploadFile.name)) {
@@ -57,6 +57,7 @@ $(document).ready( function() {
                 window.onbeforeunload = null;
             },
             success: function(data) {
+                alert("here3");
                 // onSuccess
             },
             done: function (event, data) {
