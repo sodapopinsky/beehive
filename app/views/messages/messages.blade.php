@@ -34,7 +34,7 @@
           <div style="background:#F2F2F2; cursor:pointer; margin-bottom:1px; padding:10px 5px;" onclick="goAjax({{$key}},'{{ $initName }}');"> 
 
         <span class="pull-right date">{{$conversation->created_at}}</span> 
-        <img class="avatar pull-left" alt="user-avatar" src="images/avatar_50.jpg"/> 
+       
                   <span class="pull-left" style="margin-left:5px;"><b>{{$conversation->toUser()->first()->firstName . ' ' . $conversation->toUser()->first()->lastName}}</b>
                   <p>{{$conversation->message}}</p> </span>
         

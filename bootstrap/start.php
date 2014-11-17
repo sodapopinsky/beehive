@@ -24,13 +24,14 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = 'local';
- $app->detectEnvironment(array(
 
-	'local' => array('nicks-mbp.no.cox.net','Nicks-MacBook-Pro.local','local'),
+$env = $app->detectEnvironment(array(
+
+	'local' => array('nicks-mbp.no.cox.net','Nicks-MacBook-Pro.local'),
 	/*'local' => '*.local'*/
-
 ));
+
+ 
 
 /*
 |--------------------------------------------------------------------------
