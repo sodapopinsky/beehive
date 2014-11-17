@@ -19,7 +19,7 @@
         <?php $initId = 0; ?>
         @foreach($data['conversations'] as $key => $conversation)
         <?php
-        if($initId != 0)){
+        if($initId == 0){
         if($key == $conversation->from){
            $initName = $conversation->fromUser()->first()->firstName . ' ' . $conversation->fromUser()->first()->lastName;
         }
