@@ -18,7 +18,7 @@ class Facebook
         $this->redirectUrl = 'http://localhost:8000/facebook';
       }
       else{
-         $this->redirectUrl = 'atomicbeehive.herokuapp.com/facebook';
+         $this->redirectUrl = 'http://atomicbeehive.herokuapp.com/facebook';
       }
         	//$abtest = "382316005227557";
 		//$ab = "157606107767381";
