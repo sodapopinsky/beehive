@@ -273,7 +273,7 @@ use Facebook\FacebookSession;
          <td>
           <?php 
           if($post->picture != null){ ?>
-          <img style="float:left;" width="75" height="75" src="{{$s3->getObjectUrl(Config::get('constants.photosBucket')
+          <img style="float:left;" width="75" height="75" src="{{$data['s3']->getObjectUrl(Config::get('constants.photosBucket')
           ,$post->id,'+120 minutes')}}">
           <?php
           } 
