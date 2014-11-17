@@ -91,8 +91,9 @@
 
  
   $( document ).ready(function() {
-        
-   goAjax(<?php echo $initId;?>,"<?php echo $initName;?>")
+        <?php if($initId != 0) { ?>
+   goAjax(<?php echo $initId;?>,"<?php echo $initName;?>");
+   <?php } ?>
   });
  
 
