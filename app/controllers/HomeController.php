@@ -22,9 +22,7 @@ class HomeController extends Controller{
 
 		public function jsonData()
 	{
-$arr = array('from' => 'TicketFactory', 'date' => '1400956671914', 'subject' => 'Your confirmation #W45021238038', 'id' => "3");
-
-		return json_encode($arr);
+return Response::json(array('name' => 'Steve', 'state' => 'CA'));
 
 	}
 
