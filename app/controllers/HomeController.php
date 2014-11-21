@@ -22,8 +22,8 @@ class HomeController extends Controller{
 
 		public function jsonData()
 	{
-return Response::json(array('name' => 'Steve', 'state' => 'CA'));
 
+return Response::json(array('name' => 'Steve', 'state' => 'CA'))->setCallback(Input::get('callback'));
 	}
 
 
