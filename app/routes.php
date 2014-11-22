@@ -47,6 +47,7 @@ Route::post('login', 'AuthController@doLogin');
 
 
 Route::group(['after' => 'allowOrigin'], function() {
+Route::get('api/dologin', 'APIController@doLogin');
 Route::get('json', 'HomeController@jsonData');
 });
 
