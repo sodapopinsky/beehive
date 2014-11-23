@@ -1,6 +1,6 @@
 <?php
-
-class HomeController extends Controller{
+use NS\Accounts\UserRepository; 
+class APIController extends Controller{
 
 	/*
 	|--------------------------------------------------------------------------
@@ -16,11 +16,21 @@ class HomeController extends Controller{
 	*/
 
 
+  protected $users;
 
+    public function __construct(UserRepository $users){
+        $this->users = $users;
+    }
 		public function doLogin()
 	{
 
-return Response::json(array('name' => 'Steve', 'state' => 'CA'))->setCallback(Input::get('callback'));
+ $user = $this->users->getByUsernamePassword(Input::get('username'),Input::get('password'));
+        if(!$user){ 
+        return Response::json(array('errors' => 'User Not Found'))->setCallback(Input::get('callback'));
+         }
+   
+
+return Response::json(array('firstName' => $user->firstName, 'lastName' => $user->lastName))->setCallback(Input::get('callback'));
 	}
 
 

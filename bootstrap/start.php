@@ -28,8 +28,9 @@ $app = new Illuminate\Foundation\Application;
 $env = $app->detectEnvironment(array(
 
 	'local' => array('nicks-mbp.no.cox.net','Nicks-MacBook-Pro.local'),
-	'local' => '*.local'
+	/*'local' => '*.local'*/
 ));
+
 
  
 
